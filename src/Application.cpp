@@ -5,9 +5,11 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#define ASSERT(x) if(!(x)) __debugbreak();
+#include "Renderer.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
-// -------------------------------------------------------------------------------------- Custom Helper Methods
+// ---------------------------------------------------------------------------------------------------------------------------- Custom Helper Methods
 static bool LogError()
 {
 	GLenum e = glGetError();
@@ -121,7 +123,7 @@ static int CreateShaderProgram(const std::string& vertShader, const std::string&
 	return programId;
 }
 
-// ------------------------------------------------------------------------------------------------ Main Method
+// -------------------------------------------------------------------------------------------------------------------------------------- Main Method
 int main(void)
 {
 	GLFWwindow* window;
@@ -157,69 +159,66 @@ int main(void)
 	// Print out current OpenGL version
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
-	// Vertices
-	float vertPos[8] = {
-		-0.5f, 0.5,
-		-0.5f, -0.5,
-		0.5f, -0.5f,
-		0.5f, 0.5f
-	};
-	// Vertext buffer declaration
-	unsigned int vertBufferId;
-	glGenBuffers(1, &vertBufferId);
-	glBindBuffer(GL_ARRAY_BUFFER, vertBufferId);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, vertPos, GL_STATIC_DRAW);
-	// Specify vertex data structure
-	unsigned int vao;
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	// Setup vertex layout (bind current buffer to vertex array 0)
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-	glEnableVertexAttribArray(0);
+	{
+		// Vertices
+		float vertPos[8] = {
+			-0.5f, 0.5,
+			-0.5f, -0.5,
+			0.5f, -0.5f,
+			0.5f, 0.5f
+		};
+		// Vertext buffer declaration
+		VertexBuffer vb(vertPos, sizeof(float) * 8);
+		// Specify vertex data structure
+		unsigned int vao;
+		glGenVertexArrays(1, &vao);
+		glBindVertexArray(vao);
+		// Setup vertex layout (bind current buffer to vertex array 0)
+		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
+		glEnableVertexAttribArray(0);
 
+		// Indices
+		unsigned short vertIdx[6] = {
+			0, 1, 2,
+			0, 2, 3
+		};
+		// Index buffer declaration
+		IndexBuffer ib(vertIdx, 6);
 
-	// Indices
-	unsigned int vertIdx[6] = {
-		0, 1, 2,
-		0, 2, 3
-	};
-	// Index buffer declaration
-	unsigned int idxBufferId;
-	glGenBuffers(1, &idxBufferId);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idxBufferId);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 6, vertIdx, GL_STATIC_DRAW);
+		// Create shaders
+		unsigned int shaderId = CreateShaderProgram(
+			ReadShader("res/shaders/TestVert.shader"),
+			ReadShader("res/shaders/TestFrag.shader")
+		);
+		glUseProgram(shaderId);
 
-	// Create shaders
-	unsigned int shaderId = CreateShaderProgram(
-		ReadShader("res/shaders/TestVert.shader"),
-		ReadShader("res/shaders/TestFrag.shader")
-	);
-	glUseProgram(shaderId);
+		// Uniform example
+		int location = glGetUniformLocation(shaderId, "u_Color");
+		ASSERT(location != -1);
+		glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f);
 
-	// Uniform example
-	int location = glGetUniformLocation(shaderId, "u_Color");
-	ASSERT(location != -1);
-	glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f);
+		// ------------------------------------------------------------------------------------------------------------------------------------ Main Loop
+		/* Loop until the user closes the window */
+		while (!glfwWindowShouldClose(window)) {
+			/* Render here */
+			glClear(GL_COLOR_BUFFER_BIT);
 
-	// ---------------------------------------------------------------------------------------------- Main Loop
-	/* Loop until the user closes the window */
-	while (!glfwWindowShouldClose(window)) {
-		/* Render here */
-		glClear(GL_COLOR_BUFFER_BIT);
+			glBindVertexArray(vao);
+			ib.Bind();
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+			/* Swap front and back buffers */
+			glfwSwapBuffers(window);
 
-		/* Swap front and back buffers */
-		glfwSwapBuffers(window);
+			/* Poll for and process events */
+			glfwPollEvents();
 
-		/* Poll for and process events */
-		glfwPollEvents();
+			/* Log error */
+			LogError();
+		}
 
-		/* Log error */
-		LogError();
+		glDeleteProgram(shaderId);
 	}
-
-	glDeleteProgram(shaderId);
 
 	glfwTerminate();
 	return 0;

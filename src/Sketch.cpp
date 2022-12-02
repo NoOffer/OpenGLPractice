@@ -6,6 +6,7 @@ struct Vert {
 };
 
 //int main() {
-//	std::cout << sizeof(float) << std::endl;
-//	std::cout << sizeof(Vert) << std::endl;
+//	unsigned short a = 1;
+//	std::cout << sizeof(a) << std::endl;
+//	std::cout << sizeof(unsigned short) << std::endl;
 //}
