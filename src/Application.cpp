@@ -1,13 +1,19 @@
+// Stream control
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
+// GL libraries
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+// Custom abstractions
 #include "Renderer.h"
 #include "VertexBuffer.h"
+#include "VertexArray.h"
 #include "IndexBuffer.h"
+#include "Shader.h"
+#include "Texture.h"
 
 // ---------------------------------------------------------------------------------------------------------------------------- Custom Helper Methods
 static bool LogError()
@@ -22,105 +28,6 @@ static bool LogError()
 		return false;
 	}
 	return true;
-}
-
-
-//static void ParseShader(std::string& filepath)
-//{
-//	std::ifstream stream(filepath);
-//
-//	enum class ShaderType
-//	{
-//		NONE = -1, VERTEX = 0, FRAGMENT = 1
-//	};
-//
-//	std::string line;
-//	std::stringstream ss[2];
-//	ShaderType shaderType = ShaderType::NONE;
-//	while (getline(stream, line)) {
-//		if (line.find("#shader") != std::string::npos) {
-//			if (line.find("vertex") != std::string::npos) {
-//				shaderType = ShaderType::VERTEX;
-//			}
-//			else if (line.find("fragment") != std::string::npos) {
-//				shaderType = ShaderType::FRAGMENT;
-//			}
-//		}
-//		else {
-//			ss[(int)shaderType] << line << '\n';
-//		}
-//	}
-//
-//	stream.close();
-//}
-
-static std::string ReadShader(std::string filepath)
-{
-	std::ifstream fileStream(filepath);
-	if (!fileStream.is_open()) {
-		std::cout << "Failed to load shader at " << filepath << std::endl;
-		return "";
-	}
-	std::stringstream ss;
-	ss << fileStream.rdbuf();
-	fileStream.close();
-
-	return ss.str();
-}
-
-static unsigned int ComplieShader(const std::string& source, unsigned int type)
-{
-	// Create a shader object
-	unsigned int shaderId = glCreateShader(type);
-	// Pass in the shader code
-	const char* src = source.c_str();
-	glShaderSource(shaderId, 1, &src, nullptr);
-	// Compile
-	glCompileShader(shaderId);
-
-	// Error handling
-	int status;
-	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE) {
-		// Retrieve the length of the error message
-		int msgLength;
-		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &msgLength);
-		// Message string
-		char* msg = (char*)malloc(msgLength * sizeof(char));
-		glGetShaderInfoLog(shaderId, msgLength, &msgLength, msg);
-		std::cout << (type == GL_VERTEX_SHADER ? "Vertex" : "Fragment") << "Shader Compilation Failure: "
-			<< msg << std::endl;
-		// Free the space for the message string
-		free(msg);
-
-		// Delete the unsuccessfully compiled shader
-		glDeleteShader(shaderId);
-
-		return 0;
-	}
-
-	return shaderId;
-}
-
-static int CreateShaderProgram(const std::string& vertShader, const std::string& fragShader)
-{
-	// Create a program object that holds the shaders
-	unsigned int programId = glCreateProgram();
-	// Get the references of the shaders after compilation
-	unsigned int vs = ComplieShader(vertShader, GL_VERTEX_SHADER);
-	unsigned int fs = ComplieShader(fragShader, GL_FRAGMENT_SHADER);
-
-	// Attach the shaders and activate the program
-	glAttachShader(programId, vs);
-	glAttachShader(programId, fs);
-	glLinkProgram(programId);
-	glValidateProgram(programId);
-
-	// Destroy the shaders since they have been linked to the program
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-
-	return programId;
 }
 
 // -------------------------------------------------------------------------------------------------------------------------------------- Main Method
@@ -159,53 +66,60 @@ int main(void)
 	// Print out current OpenGL version
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
+	// Render content initialization
 	{
 		// Vertices
-		float vertPos[8] = {
-			-0.5f, 0.5,
-			-0.5f, -0.5,
-			0.5f, -0.5f,
-			0.5f, 0.5f
+		float vertPos[16] = {
+			// Position   UV Coord
+			-0.5f, -0.5,  0.0f, 0.0f,  // 0
+			 0.5f, -0.5,  1.0f, 0.0f,  // 1
+			 0.5f,  0.5f, 1.0f, 1.0f,  // 2
+			-0.5f,  0.5f, 0.0f, 1.0f,  // 3
 		};
-		// Vertext buffer declaration
-		VertexBuffer vb(vertPos, sizeof(float) * 8);
-		// Specify vertex data structure
-		unsigned int vao;
-		glGenVertexArrays(1, &vao);
-		glBindVertexArray(vao);
-		// Setup vertex layout (bind current buffer to vertex array 0)
-		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
-		glEnableVertexAttribArray(0);
+		VertexBuffer vb(vertPos, sizeof(float) * 16);	  // Create vertext buffer
+		VertexBufferLayout layout;						  // Create buffer layout
+		// Setup layout
+		layout.Push<float>(2);
+		layout.Push<float>(2);
+		VertexArray va;									  // Create vertex array
+		// Bind vb and layout to va
+		va.SetupArray(vb, layout);
+
+		// Enable blending
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
 
 		// Indices
-		unsigned short vertIdx[6] = {
+		unsigned int vertIdx[6] = {
 			0, 1, 2,
 			0, 2, 3
 		};
-		// Index buffer declaration
-		IndexBuffer ib(vertIdx, 6);
+		IndexBuffer ib(vertIdx, 6);						  // Create index buffer
 
-		// Create shaders
-		unsigned int shaderId = CreateShaderProgram(
-			ReadShader("res/shaders/TestVert.shader"),
-			ReadShader("res/shaders/TestFrag.shader")
+		ShaderProgram shader(							  // Create shader
+			"res/shaders/TestVert.shader",
+			"res/shaders/TestFrag.shader"
 		);
-		glUseProgram(shaderId);
 
-		// Uniform example
-		int location = glGetUniformLocation(shaderId, "u_Color");
-		ASSERT(location != -1);
-		glUniform4f(location, 1.0f, 0.0f, 0.0f, 1.0f);
+		Texture texture("res/textures/TestTexture.png");  // Create texture
+		// Assign texture to shader
+		texture.Bind();
+		shader.SetUniform1i("u_Texture", 0);
+
+		Renderer renderer;
 
 		// ------------------------------------------------------------------------------------------------------------------------------------ Main Loop
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window)) {
 			/* Render here */
-			glClear(GL_COLOR_BUFFER_BIT);
+			renderer.Clear();
 
-			glBindVertexArray(vao);
-			ib.Bind();
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, nullptr);
+			//// Uniform example
+			//shader.Bind();
+			//shader.SetUniform4f("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);
+
+			// Drawcall
+			renderer.Draw(va, ib, shader);
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
@@ -214,10 +128,14 @@ int main(void)
 			glfwPollEvents();
 
 			/* Log error */
+			//std::cout << "Test Breakpoint 1" << std::endl;
+			LogError();
+
+			/* Log error */
+			//std::cout << "Test Breakpoint 2" << std::endl;
 			LogError();
 		}
-
-		glDeleteProgram(shaderId);
+		shader.~ShaderProgram();
 	}
 
 	glfwTerminate();
