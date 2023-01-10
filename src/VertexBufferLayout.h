@@ -23,9 +23,7 @@ public:
 	}
 
 	template<typename T>
-	void Push(unsigned int count)
-	{
-	}
+	void Push(unsigned int count);
 
 	template<>
 	void Push<float>(unsigned int count)

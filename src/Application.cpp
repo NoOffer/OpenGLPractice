@@ -7,6 +7,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+// Helper libraries
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 // Custom abstractions
 #include "Renderer.h"
 #include "VertexBuffer.h"
@@ -14,6 +18,9 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "GUI.h"
+
+#include "render_phase/ClearPhase.h"
 
 // ---------------------------------------------------------------------------------------------------------------------------- Custom Helper Methods
 static bool LogError()
@@ -68,13 +75,20 @@ int main(void)
 
 	// Render content initialization
 	{
+		// Setup render phase debugger
+		phase::RenderPhase* currentPhase = nullptr;
+		phase::PhaseMenu* phaseMenu = new phase::PhaseMenu(currentPhase);
+		currentPhase = phaseMenu;
+
+		phaseMenu->RegisterPhase<phase::ClearPhase>("Clear Phase");
+
 		// Vertices
 		float vertPos[16] = {
 			// Position   UV Coord
-			-0.5f, -0.5,  0.0f, 0.0f,  // 0
-			 0.5f, -0.5,  1.0f, 0.0f,  // 1
-			 0.5f,  0.5f, 1.0f, 1.0f,  // 2
-			-0.5f,  0.5f, 0.0f, 1.0f,  // 3
+			-1.0f, -1.0f, 0.0f, 0.0f,  // 0
+			 1.0f, -1.0f, 1.0f, 0.0f,  // 1
+			 1.0f,  1.0f, 1.0f, 1.0f,  // 2
+			-1.0f,  1.0f, 0.0f, 1.0f,  // 3
 		};
 		VertexBuffer vb(vertPos, sizeof(float) * 16);	  // Create vertext buffer
 		VertexBufferLayout layout;						  // Create buffer layout
@@ -101,25 +115,58 @@ int main(void)
 			"res/shaders/TestFrag.shader"
 		);
 
+		// Projection matrix
+		glm::mat4 projMatrix = glm::ortho(0.0f, 640.0f, 0.0f, 480.0f, 0.0f, 1.0f);
+		glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+		glm::mat4 modelMatrix = glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(320.0f, 240.0f, 0.0f)), glm::vec3(200.0f, 200.0f, 1.0f));
+		shader.SetUniformMat4f("u_MVP", projMatrix * viewMatrix * modelMatrix);
+
 		Texture texture("res/textures/TestTexture.png");  // Create texture
 		// Assign texture to shader
 		texture.Bind();
 		shader.SetUniform1i("u_Texture", 0);
 
-		Renderer renderer;
+		// GUI setup
+		GUI::Init(window, "#version 330 core");
+
+		float f = 0.0f;
+		ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 		// ------------------------------------------------------------------------------------------------------------------------------------ Main Loop
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window)) {
 			/* Render here */
-			renderer.Clear();
-
-			//// Uniform example
-			//shader.Bind();
-			//shader.SetUniform4f("u_Color", 1.0f, 0.0f, 0.0f, 1.0f);
+			Renderer::Clear();
 
 			// Drawcall
-			renderer.Draw(va, ib, shader);
+			Renderer::Draw(va, ib, shader);
+
+			GUI::NewFrame();
+
+			if (currentPhase) {
+				currentPhase->OnUpdate(1);
+				currentPhase->OnRender();
+
+				ImGui::Begin("Render Phase");
+				if (currentPhase != phaseMenu && ImGui::Button("<-")) {
+					delete currentPhase;
+					currentPhase = phaseMenu;
+				}
+				currentPhase->OnGUIRender();
+				ImGui::End();
+			}
+
+			//{
+			//	ImGui::Begin("Sample Window");                          // Create a window called "Hello, world!" and append into it.
+
+			//	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+			//	ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+			//	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+			//	ImGui::End();
+			//}
+
+			GUI::Render();
 
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
@@ -127,16 +174,18 @@ int main(void)
 			/* Poll for and process events */
 			glfwPollEvents();
 
-			/* Log error */
+			///* Log error */
 			//std::cout << "Test Breakpoint 1" << std::endl;
-			LogError();
+			//LogError();
 
 			/* Log error */
 			//std::cout << "Test Breakpoint 2" << std::endl;
 			LogError();
 		}
-		shader.~ShaderProgram();
 	}
+
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 
 	glfwTerminate();
 	return 0;

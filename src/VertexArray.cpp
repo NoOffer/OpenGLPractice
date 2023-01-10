@@ -26,7 +26,7 @@ void VertexArray::SetupArray(const VertexBuffer& vb, const VertexBufferLayout& l
 	vb.Bind();
 
 	std::vector<VertexBufferAttrib> attributes = layout.GetAttrib();
-	for (int i = 0; i < attributes.size(); i++) {
+	for (unsigned int i = 0; i < attributes.size(); i++) {
 		glVertexAttribPointer(i, attributes[i].count, attributes[i].type, GL_FALSE, layout.GetStride(), (const void*)attributes[i].offset);
 		glEnableVertexAttribArray(i);
 	}

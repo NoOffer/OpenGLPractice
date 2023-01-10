@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const ShaderProgram& shader) const
+void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const ShaderProgram& shader)
 {
 	// Bind
 	va.Bind();
@@ -13,7 +13,7 @@ void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib, const ShaderPr
 	glDrawElements(GL_TRIANGLES, ib.GetCount(), ib.GetIndexType(), nullptr);
 }
 
-void Renderer::Clear() const
+void Renderer::Clear()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 }

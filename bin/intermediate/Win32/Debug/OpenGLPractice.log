@@ -1,4 +1,5 @@
 ﻿  Application.cpp
-E:\Projects\C++\OpenGLPractice\src\VertexArray.h(3,10): warning C4067: 预处理器指令后有意外标记 - 应输入换行符
-E:\Projects\C++\OpenGLPractice\src\VertexArray.h(4,10): warning C4067: 预处理器指令后有意外标记 - 应输入换行符
+  ClearPhase.cpp
+  RenderPhase.cpp
+  正在生成代码...
   OpenGLPractice.vcxproj -> E:\Projects\C++\OpenGLPractice\bin\Win32\Debug\OpenGLPractice.exe
