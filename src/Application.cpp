@@ -20,8 +20,6 @@
 #include "Texture.h"
 #include "GUI.h"
 
-#include "render_phase/ClearPhase.h"
-
 // ---------------------------------------------------------------------------------------------------------------------------- Custom Helper Methods
 static bool LogError()
 {
@@ -75,13 +73,6 @@ int main(void)
 
 	// Render content initialization
 	{
-		// Setup render phase debugger
-		phase::RenderPhase* currentPhase = nullptr;
-		phase::PhaseMenu* phaseMenu = new phase::PhaseMenu(currentPhase);
-		currentPhase = phaseMenu;
-
-		phaseMenu->RegisterPhase<phase::ClearPhase>("Clear Phase");
-
 		// Vertices
 		float vertPos[16] = {
 			// Position   UV Coord
@@ -143,28 +134,15 @@ int main(void)
 
 			GUI::NewFrame();
 
-			if (currentPhase) {
-				currentPhase->OnUpdate(1);
-				currentPhase->OnRender();
+			{
+				ImGui::Begin("Sample Window");                          // Create a window called "Hello, world!" and append into it.
 
-				ImGui::Begin("Render Phase");
-				if (currentPhase != phaseMenu && ImGui::Button("<-")) {
-					delete currentPhase;
-					currentPhase = phaseMenu;
-				}
-				currentPhase->OnGUIRender();
+				ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
+				ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
 				ImGui::End();
 			}
-
-			//{
-			//	ImGui::Begin("Sample Window");                          // Create a window called "Hello, world!" and append into it.
-
-			//	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-			//	ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-			//	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-
-			//	ImGui::End();
-			//}
 
 			GUI::Render();
 
