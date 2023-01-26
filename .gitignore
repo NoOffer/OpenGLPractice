@@ -1,3 +1,4 @@
 .vs/
 bin/
-OpenGLPractice.*
+bin-obj/
+OpenGLPractice/OpenGLPractice.vcxproj*
