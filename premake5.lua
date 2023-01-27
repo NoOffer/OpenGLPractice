@@ -24,7 +24,7 @@ project "OpenGLPractice"
 
 	includedirs
 	{
-		"dependencies/GLFW/include"
+		"Dependencies/GLFW/include"
 	}
 
 	links
