@@ -8,6 +8,7 @@ public:
 	Window();
 	~Window();
 	bool Init(int width, int height);
+	bool Alive();
 	void Update();
 
 private:

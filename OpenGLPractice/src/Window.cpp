@@ -9,14 +9,14 @@ Window::~Window() {}
 
 bool Window::Init(int width, int height)
 {
-	// OpenGL context and window initialization
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//// OpenGL context and window initialization
+	//glfwInit();
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Window initialization
-	m_Window = glfwCreateWindow(width, height, "LearnOpenGL", NULL, NULL);
+	m_Window = glfwCreateWindow(width, height, "OpenGL Example", NULL, NULL);
 	if (m_Window == NULL) {
 		glfwTerminate();
 		return false;
@@ -31,8 +31,10 @@ bool Window::Init(int width, int height)
 	return true;
 }
 
+bool Window::Alive() { return glfwWindowShouldClose(m_Window); }
+
 void Window::Update()
 {
-	glfwSwapBuffers(m_Window);
 	glfwPollEvents();
+	glfwSwapBuffers(m_Window);
 }
