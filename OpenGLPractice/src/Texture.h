@@ -7,7 +7,7 @@ class Texture
 private:
 	unsigned int m_RendererID;
 	std::string m_Filepath;
-	int m_Width, m_Height, m_BPP;  // stb_image uses int instead of unsigned int
+	int m_Width, m_Height, m_NumChannel;  // stb_image uses int instead of unsigned int
 
 public:
 	Texture(const std::string& path);

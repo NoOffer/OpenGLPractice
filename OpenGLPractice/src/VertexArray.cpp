@@ -32,4 +32,5 @@ void VertexArray::SetupArray(const VertexBuffer& vb, const VertexBufferLayout& l
 		glVertexAttribPointer(i, attributes[i].count, attributes[i].type, GL_FALSE, layout.GetStride(), (const void*)attributes[i].offset);
 		glEnableVertexAttribArray(i);
 	}
+	glBindVertexArray(0);
 }

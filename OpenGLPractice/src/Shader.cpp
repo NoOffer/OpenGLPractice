@@ -6,6 +6,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "glm/gtc/type_ptr.hpp"
+
 //static void ParseShader(std::string& filepath)
 //{
 //	std::ifstream stream(filepath);
@@ -154,5 +156,5 @@ void ShaderProgram::SetUniform4f(const std::string name, float f0, float f1, flo
 void ShaderProgram::SetUniformMat4f(const std::string name, const glm::mat4& matrix)
 {
 	Bind();
-	glUniformMatrix4fv(GetUniformPosition(name), 1, GL_FALSE, &matrix[0][0]);
+	glUniformMatrix4fv(GetUniformPosition(name), 1, GL_FALSE, glm::value_ptr(matrix));
 }

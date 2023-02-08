@@ -5,6 +5,7 @@
 class IndexBuffer
 {
 public:
+	IndexBuffer();
 	IndexBuffer(const unsigned int* data, unsigned int count);
 	IndexBuffer(const unsigned short* data, unsigned int count);
 	~IndexBuffer();

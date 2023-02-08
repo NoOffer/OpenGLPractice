@@ -2,6 +2,12 @@
 
 #include <GLAD/glad.h>
 
+IndexBuffer::IndexBuffer()
+	: m_Count(0), m_IndexType(GL_UNSIGNED_INT)
+{
+	m_RendererID = 0;
+}
+
 IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
 	: m_Count(count), m_IndexType(GL_UNSIGNED_INT)
 {

@@ -10,7 +10,6 @@
 
 // Custom abstractions
 #include "Window.h"
-#include "VertexBuffer.h"
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
@@ -72,7 +71,7 @@ int main(void)
 			-1.0f, -1.0f, 0.0f, 0.0f,  // 0
 			 1.0f, -1.0f, 1.0f, 0.0f,  // 1
 			 1.0f,  1.0f, 1.0f, 1.0f,  // 2
-			-1.0f,  1.0f, 0.0f, 1.0f,  // 3
+			-1.0f,  1.0f, 0.0f, 1.0f,  // 3s
 		};
 		VertexBuffer vb(vertPos, sizeof(float) * 16);	  // Create vertext buffer
 		VertexBufferLayout layout;						  // Create buffer layout
