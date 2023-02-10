@@ -4,7 +4,7 @@
 
 #include "glm/glm.hpp"
 
-class ShaderProgram
+class Shader
 {
 private:
 	unsigned int m_RendererID;
@@ -12,8 +12,9 @@ private:
 
 	unsigned int GetUniformPosition(const std::string name);
 public:
-	ShaderProgram(const std::string vertFilepath, const std::string fragFilepath);
-	~ShaderProgram();
+	Shader();
+	Shader(const std::string vertFilepath, const std::string fragFilepath);
+	~Shader();
 
 	void Bind() const;
 	void Unbind() const;

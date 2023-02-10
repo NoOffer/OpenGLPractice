@@ -4,6 +4,7 @@
 
 #include "VertexArray.h"
 #include "IndexBuffer.h"
+#include "Shader.h"
 
 class Model
 {
@@ -16,6 +17,8 @@ public:
 	void Scale(glm::vec3 v);
 	glm::mat4 GetModelMatrix();
 
+	inline void SetShader(Shader shader) { m_Shader = shader; }
+
 	void Bind();
 	void Unbind();
 
@@ -26,5 +29,6 @@ private:
 
 	VertexArray m_VA;
 	IndexBuffer m_IB;
+	Shader m_Shader;
 };
 

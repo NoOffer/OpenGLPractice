@@ -6,9 +6,10 @@ class IndexBuffer
 {
 public:
 	IndexBuffer();
-	IndexBuffer(const unsigned int* data, unsigned int count);
-	IndexBuffer(const unsigned short* data, unsigned int count);
 	~IndexBuffer();
+
+	void SetData(const unsigned int* data, unsigned int count);
+	void SetData(const unsigned short* data, unsigned int count);
 
 	void Bind() const;
 	void Unbind() const;

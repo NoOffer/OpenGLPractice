@@ -25,7 +25,7 @@ Model::Model()
 		0, 1, 2,
 		0, 2, 3
 	};
-	Model::m_IB = IndexBuffer(vertIdx, 6);			  // Create index buffer
+	m_IB.SetData(vertIdx, 6);
 
 	m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -42,7 +42,6 @@ void Model::Translate(glm::vec3 v)
 void Model::Rotate(glm::vec3 v)
 {
 	m_Rotation += v;
-	m_Rotation %= 360.0f;
 }
 
 void Model::Scale(glm::vec3 v)
@@ -59,10 +58,12 @@ void Model::Bind()
 {
 	m_VA.Bind();
 	m_IB.Bind();
+	m_Shader.Bind();
 }
 
 void Model::Unbind()
 {
 	m_VA.Unbind();
 	m_IB.Unbind();
+	m_Shader.Unbind();
 }

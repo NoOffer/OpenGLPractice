@@ -106,28 +106,33 @@ static int CreateShaderProgram(const std::string vertFilepath, const std::string
 	return programId;
 }
 
-ShaderProgram::ShaderProgram(const std::string vertFilepath, const std::string fragFilepath)
+Shader::Shader()
+{
+	m_RendererID = 0;
+}
+
+Shader::Shader(const std::string vertFilepath, const std::string fragFilepath)
 {
 	m_RendererID = CreateShaderProgram(vertFilepath, fragFilepath);
 }
 
-ShaderProgram::~ShaderProgram()
+Shader::~Shader()
 {
 	glDeleteProgram(m_RendererID);
 }
 
 
-void ShaderProgram::Bind() const
+void Shader::Bind() const
 {
 	glUseProgram(m_RendererID);
 }
 
-void ShaderProgram::Unbind() const
+void Shader::Unbind() const
 {
 	glUseProgram(0);
 }
 
-unsigned int ShaderProgram::GetUniformPosition(const std::string name)
+unsigned int Shader::GetUniformPosition(const std::string name)
 {
 	if (m_UniformLocations.find(name) != m_UniformLocations.end()) {
 		return m_UniformLocations[name];
@@ -141,19 +146,19 @@ unsigned int ShaderProgram::GetUniformPosition(const std::string name)
 	return location;
 }
 
-void ShaderProgram::SetUniform1i(const std::string name, int i1)
+void Shader::SetUniform1i(const std::string name, int i1)
 {
 	Bind();
 	glUniform1i(GetUniformPosition(name), i1);
 }
 
-void ShaderProgram::SetUniform4f(const std::string name, float f0, float f1, float f2, float f3)
+void Shader::SetUniform4f(const std::string name, float f0, float f1, float f2, float f3)
 {
 	Bind();
 	glUniform4f(GetUniformPosition(name), f0, f1, f2, f3);
 }
 
-void ShaderProgram::SetUniformMat4f(const std::string name, const glm::mat4& matrix)
+void Shader::SetUniformMat4f(const std::string name, const glm::mat4& matrix)
 {
 	Bind();
 	glUniformMatrix4fv(GetUniformPosition(name), 1, GL_FALSE, glm::value_ptr(matrix));
