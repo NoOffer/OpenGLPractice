@@ -67,3 +67,10 @@ void Model::Unbind()
 	m_IB.Unbind();
 	m_Shader.Unbind();
 }
+
+void Model::Draw()
+{
+	Bind();
+	// Drawcall
+	glDrawElements(GL_TRIANGLES, m_IB.GetCount(), m_IB.GetIndexType(), nullptr);
+}

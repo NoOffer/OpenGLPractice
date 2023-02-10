@@ -17,10 +17,12 @@ public:
 	void Scale(glm::vec3 v);
 	glm::mat4 GetModelMatrix();
 
-	inline void SetShader(Shader shader) { m_Shader = shader; }
+	inline void SetShader(Shader& shader) { m_Shader = shader; }
 
 	void Bind();
 	void Unbind();
+
+	void Draw();
 
 private:
 	glm::vec3 m_Position;

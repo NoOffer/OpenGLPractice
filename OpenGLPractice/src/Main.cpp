@@ -93,10 +93,7 @@ int main(void)
 			// Clear
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			model.Bind();
-			shader.Bind();
-			// Drawcall
-			//glDrawElements(GL_TRIANGLES, ib.GetCount(), ib.GetIndexType(), nullptr);
+			model.Draw();
 
 			window.Update();
 
