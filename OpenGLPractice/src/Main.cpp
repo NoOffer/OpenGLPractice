@@ -77,8 +77,8 @@ int main(void)
 		model.SetShader(shader);
 
 		// Projection matrix
-		glm::mat4 projMatrix = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 0.1f, 100.0f);
-		glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -100.0f));
+		glm::mat4 projMatrix = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 0.1f, 100.0f);
+		glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -50.0f));
 		glm::mat4 modelMatrix = model.GetModelMatrix();
 		shader.SetUniformMat4f("u_MVP", projMatrix * viewMatrix * modelMatrix);
 
@@ -91,16 +91,18 @@ int main(void)
 		// Enable blending
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
+		// Enable depth buffer
+		glEnable(GL_DEPTH_TEST);
 
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		// ------------------------------------------------------------------------------------------------------------------------------------ Main Loop
 		while (!window.Alive()) {
 			// Clear
-			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-			model.Rotate(1.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			model.Rotate(0.2f, glm::vec3(0.0f, 1.0f, 0.0f));
 			shader.SetUniformMat4f("u_MVP", projMatrix * viewMatrix * model.GetModelMatrix());
 			model.Draw();
 

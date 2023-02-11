@@ -7,14 +7,14 @@ Model::Model()
 	// Vertices
 	float vertPos[24] = {
 		// Position   UV Coord
-		-1.0f, -1.0f,  0.0f,  // 0
+		-1.0f, -1.0f,  1.0f,  // 0
 		 1.0f, -1.0f,  1.0f,  // 1
 		 1.0f,  1.0f,  1.0f,  // 2
-		-1.0f,  1.0f,  0.0f,  // 3
-		-1.0f, -1.0f, -0.0f,  // 4
+		-1.0f,  1.0f,  1.0f,  // 3
+		-1.0f, -1.0f, -1.0f,  // 4
 		 1.0f, -1.0f, -1.0f,  // 5
 		 1.0f,  1.0f, -1.0f,  // 6
-		-1.0f,  1.0f, -0.0f,  // 7
+		-1.0f,  1.0f, -1.0f,  // 7
 	};
 	VertexBuffer vb(vertPos, sizeof(float) * 24);	  // Create vertext buffer
 	VertexBufferLayout layout;						  // Create buffer layout
