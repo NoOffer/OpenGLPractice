@@ -67,22 +67,26 @@ int main(void)
 	{
 		// Render content initialization
 		Model model = Model();
+		model.Scale(10.0f, 10.0f, 10.0f);
 
-		Shader shader(									  // Create shader
+		// Create shader
+		Shader shader(
 			"res/shaders/TestVert.shader",
 			"res/shaders/TestFrag.shader"
 		);
+		model.SetShader(shader);
 
 		// Projection matrix
-		glm::mat4 projMatrix = glm::ortho(0.0f, 640.0f, 0.0f, 480.0f, 0.0f, 1.0f);
-		glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
-		//glm::mat4 modelMatrix = model.GetModelMatrix();
-		shader.SetUniformMat4f("u_MVP", projMatrix * viewMatrix/* * modelMatrix*/);
+		glm::mat4 projMatrix = glm::ortho(-100.0f, 100.0f, -100.0f, 100.0f, 0.1f, 100.0f);
+		glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -100.0f));
+		glm::mat4 modelMatrix = model.GetModelMatrix();
+		shader.SetUniformMat4f("u_MVP", projMatrix * viewMatrix * modelMatrix);
 
-		Texture texture("res/textures/TestTexture.png");  // Create texture
+		// Create texture
+		Texture texture("res/textures/TestTexture.png");
 		// Assign texture to shader
-		texture.Bind(0);
-		shader.SetUniform1i("u_Texture", 0);
+		//texture.Bind(0);
+		//shader.SetUniform1i("u_Texture", 0);
 
 		// Enable blending
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -92,6 +96,7 @@ int main(void)
 		while (!window.Alive()) {
 			// Clear
 			glClear(GL_COLOR_BUFFER_BIT);
+			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 			model.Draw();
 

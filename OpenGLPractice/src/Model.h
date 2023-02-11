@@ -12,9 +12,12 @@ public:
 	Model();
 	~Model();
 
-	void Translate(glm::vec3 v);
-	void Rotate(glm::vec3 v);
-	void Scale(glm::vec3 v);
+	inline void Translate(glm::vec3 v) { m_Position += v; }
+	inline void Rotate(glm::vec3 v) { m_Rotation += v; }
+	inline void Scale(glm::vec3 v) { m_Scale *= v; }
+	void Translate(float xOffset, float yOffset, float zOffset);
+	void Rotate(float xOffset, float yOffset, float zOffset);
+	void Scale(float xScale, float yScale, float zScale);
 	glm::mat4 GetModelMatrix();
 
 	inline void SetShader(Shader& shader) { m_Shader = shader; }

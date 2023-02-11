@@ -121,7 +121,6 @@ Shader::~Shader()
 	glDeleteProgram(m_RendererID);
 }
 
-
 void Shader::Bind() const
 {
 	glUseProgram(m_RendererID);
