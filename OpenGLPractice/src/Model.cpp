@@ -37,6 +37,8 @@ Model::Model()
 	m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
+	m_RotationMat = glm::mat4(1.0f);
 }
 
 Model::~Model() {}
@@ -46,9 +48,9 @@ void Model::Translate(float xOffset, float yOffset, float zOffset)
 	m_Position += glm::vec3(xOffset, yOffset, zOffset);
 }
 
-void Model::Rotate(float xOffset, float yOffset, float zOffset)
+void Model::Rotate(float angle, glm::vec3 axis)
 {
-	m_Rotation += glm::vec3(xOffset, yOffset, zOffset);
+	m_RotationMat = glm::rotate(m_RotationMat, glm::radians(angle), axis);
 }
 
 void Model::Scale(float xScale, float yScale, float zScale)
@@ -58,7 +60,7 @@ void Model::Scale(float xScale, float yScale, float zScale)
 
 glm::mat4  Model::GetModelMatrix()
 {
-	return glm::scale(glm::translate(glm::mat4(1.0f), m_Position), m_Scale);
+	return glm::scale(glm::translate(glm::mat4(1.0f), m_Position) * m_RotationMat, m_Scale);
 }
 
 void Model::Bind()
@@ -78,7 +80,6 @@ void Model::Unbind()
 void Model::Draw()
 {
 	Bind();
-	//m_Shader.Unbind();
 	// Drawcall
 	glDrawElements(GL_TRIANGLES, m_IB.GetCount(), m_IB.GetIndexType(), nullptr);
 }

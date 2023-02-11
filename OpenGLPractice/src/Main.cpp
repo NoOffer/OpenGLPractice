@@ -92,12 +92,16 @@ int main(void)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
 
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 		// ------------------------------------------------------------------------------------------------------------------------------------ Main Loop
 		while (!window.Alive()) {
 			// Clear
 			glClear(GL_COLOR_BUFFER_BIT);
 			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
+			model.Rotate(1.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+			shader.SetUniformMat4f("u_MVP", projMatrix * viewMatrix * model.GetModelMatrix());
 			model.Draw();
 
 			window.Update();
