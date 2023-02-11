@@ -33,30 +33,9 @@ Model::Model()
 		0, 4, 5, 0, 5, 1
 	};
 	m_IB.SetData(vertIdx, 36);
-
-	m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
-	m_Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-	m_Scale = glm::vec3(1.0f, 1.0f, 1.0f);
-
-	m_RotationMat = glm::mat4(1.0f);
 }
 
 Model::~Model() {}
-
-void Model::Translate(float xOffset, float yOffset, float zOffset)
-{
-	m_Position += glm::vec3(xOffset, yOffset, zOffset);
-}
-
-void Model::Rotate(float angle, glm::vec3 axis)
-{
-	m_RotationMat = glm::rotate(m_RotationMat, glm::radians(angle), axis);
-}
-
-void Model::Scale(float xScale, float yScale, float zScale)
-{
-	m_Scale *= glm::vec3(xScale, yScale, zScale);
-}
 
 glm::mat4  Model::GetModelMatrix()
 {

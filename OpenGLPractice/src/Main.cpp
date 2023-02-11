@@ -94,7 +94,7 @@ int main(void)
 		// Enable depth buffer
 		glEnable(GL_DEPTH_TEST);
 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		// ------------------------------------------------------------------------------------------------------------------------------------ Main Loop
 		while (!window.Alive()) {
