@@ -10,9 +10,8 @@
 
 // Custom abstractions
 #include "Window.h"
+#include "Camera.h"
 #include "Model.h"
-#include "VertexArray.h"
-#include "IndexBuffer.h"
 #include "Shader.h"
 #include "Texture.h"
 
@@ -65,6 +64,10 @@ int main(void)
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	{
+		// Create camera
+		Camera camera;
+		camera.GetViewMatrix();
+
 		// Render content initialization
 		Model model = Model();
 		model.Scale(10.0f, 10.0f, 10.0f);
