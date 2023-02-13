@@ -46,7 +46,7 @@ int main(void)
 
 	// Create a windowed mode window and its OpenGL context
 	Window window;
-	if (!window.Init(640, 480)) {
+	if (!window.Init(800, 800)) {
 		glfwTerminate();
 		return -1;
 	}

@@ -9,7 +9,6 @@ glm::mat4 Camera::GetViewMatrix()
 	glm::vec3 backward(glm::normalize(m_Position));  // By convention the z axis of camera points backward
 	glm::vec3 right(glm::cross(glm::vec3(0.0f, 1.0f, 0.0f), backward));
 	glm::vec3 upward(glm::cross(backward, right));
-	//return glm::translate(glm::mat4(1.0f), -m_Position);
 	return glm::lookAt(m_Position, glm::vec3(0.0f, 0.0f, 0.0f), upward);
 	//return glm::mat4(
 	//	right.x, upward.x, forward.x, m_Position.x,
