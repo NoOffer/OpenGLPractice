@@ -1,8 +1,13 @@
 #include "Camera.h"
 
-Camera::Camera() {}
+Camera::Camera(float fov, glm::uvec2 resolution) : m_FOV(fov), m_Resolution(resolution) {}
 
 Camera::~Camera() {}
+
+glm::mat4 Camera::GetProjMatrix()
+{
+	return glm::perspective(glm::radians(m_FOV), (float)m_Resolution.x / (float)m_Resolution.y, 0.1f, 100.0f);
+}
 
 glm::mat4 Camera::GetViewMatrix()
 {

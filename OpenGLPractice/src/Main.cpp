@@ -15,6 +15,9 @@
 #include "Shader.h"
 #include "Texture.h"
 
+const int WIDTH = 800;
+const int HEIGHT = 800;
+
 // ---------------------------------------------------------------------------------------------------------------------------- Custom Helper Methods
 static bool LogError()
 {
@@ -46,13 +49,13 @@ int main(void)
 
 	// Create a windowed mode window and its OpenGL context
 	Window window;
-	if (!window.Init(800, 800)) {
+	if (!window.Init(WIDTH, HEIGHT)) {
 		glfwTerminate();
 		return -1;
 	}
 
-	// Set refresh rate
-	glfwSwapInterval(1);
+	//// Set refresh rate
+	//glfwSwapInterval(1);
 
 	// GLAD initialization
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -65,12 +68,11 @@ int main(void)
 
 	{
 		// Create camera
-		Camera camera;
-		camera.Translate(0.0f, 0.0f, 20.0f);
+		Camera camera(45.0f, glm::uvec2(WIDTH, HEIGHT));
+		camera.Translate(0.0f, 0.0f, -20.0f);
 
 		// Render content initialization
 		Model model = Model();
-		model.Scale(10.0f, 10.0f, 10.0f);
 
 		// Create shader
 		Shader shader(
@@ -80,7 +82,7 @@ int main(void)
 		model.SetShader(shader);
 
 		// Projection matrix
-		glm::mat4 projMatrix = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, 0.1f, 100.0f);
+		glm::mat4 projMatrix = camera.GetProjMatrix();
 		glm::mat4 viewMatrix = camera.GetViewMatrix();
 		glm::mat4 modelMatrix = model.GetModelMatrix();
 		shader.SetUniformMat4f("u_MVP", projMatrix * viewMatrix * modelMatrix);
@@ -99,8 +101,14 @@ int main(void)
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+		float currentFrame = glfwGetTime();
+		float deltaTime = 0.0f;
 		// ------------------------------------------------------------------------------------------------------------------------------------ Main Loop
 		while (!window.Alive()) {
+			// Calculate delta time
+			deltaTime = glfwGetTime() - currentFrame;
+			currentFrame = glfwGetTime();
+
 			// Clear
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);

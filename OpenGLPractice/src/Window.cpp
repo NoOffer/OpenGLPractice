@@ -25,7 +25,7 @@ bool Window::Init(int width, int height)
 
 	// Set viewport
 	glViewport(0, 0, width, height);
-	glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+	glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
 		glViewport(0, 0, width, height);
 		});
 	return true;
@@ -40,7 +40,6 @@ void Window::Update()
 	if (glfwGetKey(m_Window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(m_Window, true);
 	}
-
 
 	// Swap buffer
 	glfwSwapBuffers(m_Window);
