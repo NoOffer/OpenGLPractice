@@ -151,6 +151,12 @@ void Shader::SetUniform1i(const std::string name, int i1)
 	glUniform1i(GetUniformPosition(name), i1);
 }
 
+void Shader::SetUniform3f(const std::string name, const glm::vec3& v)
+{
+	Bind();
+	glUniform3f(GetUniformPosition(name), v.x, v.y, v.z);
+}
+
 void Shader::SetUniform4f(const std::string name, float f0, float f1, float f2, float f3)
 {
 	Bind();

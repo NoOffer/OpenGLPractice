@@ -11,6 +11,7 @@
 // Custom abstractions
 #include "Window.h"
 #include "Camera.h"
+#include "PointLight.h"
 #include "Model.h"
 #include "Shader.h"
 #include "Texture.h"
@@ -72,6 +73,7 @@ int main(void)
 		camera.Translate(0.0f, 0.0f, -20.0f);
 
 		// Render content initialization
+		PointLight pointLight(glm::vec3(1.0f, 0.7f, 0.2f));
 		Model model = Model();
 
 		// Create shader
@@ -92,6 +94,9 @@ int main(void)
 		// Assign texture to shader
 		//texture.Bind(0);
 		//shader.SetUniform1i("u_Texture", 0);
+
+		// Light color
+		shader.SetUniform3f("u_LightColor", pointLight.GetColor());
 
 		// Enable blending
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

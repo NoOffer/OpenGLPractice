@@ -8,6 +8,8 @@ public:
 	PlaceableObj();
 	virtual ~PlaceableObj() {}
 
+	inline glm::vec3 GetPosition() { return m_Position; }
+
 	inline void Translate(glm::vec3 v) { m_Position += v; }
 	inline void Scale(glm::vec3 v) { m_Scale *= v; }
 	void Translate(float xOffset, float yOffset, float zOffset);

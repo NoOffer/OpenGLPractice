@@ -13,7 +13,7 @@ public:
 
 	glm::mat4 GetModelMatrix();
 
-	inline void SetShader(Shader& shader) { m_Shader = shader; }
+	inline void SetShader(const Shader& shader) { m_Shader = shader; }
 
 	void Bind();
 	void Unbind();
