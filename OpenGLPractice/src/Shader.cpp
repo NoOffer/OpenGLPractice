@@ -145,10 +145,16 @@ unsigned int Shader::GetUniformPosition(const std::string name)
 	return location;
 }
 
-void Shader::SetUniform1i(const std::string name, int i1)
+void Shader::SetUniform1i(const std::string name, int i)
 {
 	Bind();
-	glUniform1i(GetUniformPosition(name), i1);
+	glUniform1i(GetUniformPosition(name), i);
+}
+
+void Shader::SetUniform1f(const std::string name, float f)
+{
+	Bind();
+	glUniform1f(GetUniformPosition(name), f);
 }
 
 void Shader::SetUniform3f(const std::string name, const glm::vec3& v)
