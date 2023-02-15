@@ -99,8 +99,11 @@ int main(void)
 		shader.SetUniform3f("u_LightColor", pointLight.GetColor());
 
 		// Enable blending
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		// Enable culling
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 		// Enable depth buffer
 		glEnable(GL_DEPTH_TEST);
 
