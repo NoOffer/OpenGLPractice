@@ -70,10 +70,11 @@ int main(void)
 	{
 		// Create camera
 		Camera camera(45.0f, glm::uvec2(WIDTH, HEIGHT));
-		camera.Translate(0.0f, 0.0f, -20.0f);
+		camera.Translate(0.0f, 0.0f, -5.0f);
 
 		// Render content initialization
 		PointLight pointLight(glm::vec3(1.0f, 0.7f, 0.2f));
+		pointLight.Translate(5.0f, 5.0f, 5.0f);
 		Model model = Model();
 
 		// Create shader
@@ -86,17 +87,21 @@ int main(void)
 		// Projection matrix
 		glm::mat4 projMatrix = camera.GetProjMatrix();
 		glm::mat4 viewMatrix = camera.GetViewMatrix();
+		shader.SetUniformMat4f("u_VP", projMatrix * viewMatrix);
 		glm::mat4 modelMatrix = model.GetModelMatrix();
-		shader.SetUniformMat4f("u_MVP", projMatrix * viewMatrix * modelMatrix);
+		shader.SetUniformMat4f("u_M", modelMatrix);
 
 		// Create texture
 		Texture texture("res/textures/TestTexture.png");
 		// Assign texture to shader
-		//texture.Bind(0);
-		//shader.SetUniform1i("u_Texture", 0);
+		texture.Bind(0);
+		shader.SetUniform1i("u_Texture", 0);
 
 		// Light color
+		shader.SetUniform3f("u_LightPos", pointLight.GetPosition());
 		shader.SetUniform3f("u_LightColor", pointLight.GetColor());
+		// Ambient factor
+		shader.SetUniform1f("u_AmbientFactor", 0.2f);
 
 		// Enable blending
 		glEnable(GL_BLEND);
@@ -121,8 +126,8 @@ int main(void)
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-			model.Rotate(0.2f, glm::vec3(0.0f, 1.0f, 0.0f));
-			shader.SetUniformMat4f("u_MVP", projMatrix * viewMatrix * model.GetModelMatrix());
+			model.Rotate(60.0f * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
+			shader.SetUniformMat4f("u_M", model.GetModelMatrix());
 			model.Draw();
 
 			window.Update();

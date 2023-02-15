@@ -20,7 +20,8 @@ public:
 	void Unbind() const;
 
 	// Set uniforms
-	void SetUniform1i(const std::string name, int i1);
+	void SetUniform1i(const std::string name, int i);
+	void SetUniform1f(const std::string name, float f);
 	void SetUniform3f(const std::string name, const glm::vec3& v);
 	void SetUniform4f(const std::string name, float f0, float f1, float f2, float f3);
 	void SetUniformMat4f(const std::string name, const glm::mat4& matrix);
