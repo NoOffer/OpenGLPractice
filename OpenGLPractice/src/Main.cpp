@@ -70,11 +70,11 @@ int main(void)
 	{
 		// Create camera
 		Camera camera(45.0f, glm::uvec2(WIDTH, HEIGHT));
-		camera.Translate(0.0f, 0.0f, 5.0f);
+		camera.Translate(0.0f, 0.0f, 3.0f);
 
 		// Render content initialization
-		PointLight pointLight(glm::vec3(1.0f, 0.7f, 0.2f));
-		pointLight.Translate(-2.0f, 5.0f, 5.0f);
+		PointLight pointLight(glm::vec3(1.0f, 0.9f, 0.8f));
+		pointLight.Translate(-1.0f, 1.0f, 1.0f);
 		Model model = Model();
 
 		// Create shader
@@ -98,9 +98,11 @@ int main(void)
 		texture.Bind(0);
 		shader.SetUniform1i("u_Texture", 0);
 
-		// Light color
+		// Light info
 		shader.SetUniform3f("u_LightPos", pointLight.GetPosition());
 		shader.SetUniform3f("u_LightColor", pointLight.GetColor());
+		// Camera info
+		shader.SetUniform3f("u_CamPos", camera.GetPosition());
 		// Ambient factor
 		shader.SetUniform1f("u_AmbientFactor", 0.2f);
 
