@@ -87,9 +87,10 @@ int main(void)
 		// Projection matrix
 		glm::mat4 projMatrix = camera.GetProjMatrix();
 		glm::mat4 viewMatrix = camera.GetViewMatrix();
-		shader.SetUniformMat4f("u_VP", projMatrix * viewMatrix);
+		shader.SetUniformMat4f("u_Matrix_VP", projMatrix * viewMatrix);
 		glm::mat4 modelMatrix = model.GetModelMatrix();
-		shader.SetUniformMat4f("u_M", modelMatrix);
+		shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
+		shader.SetUniformMat3f("u_Matrix_M_Normal", glm::mat3(glm::transpose(glm::inverse(modelMatrix))));
 
 		// Create texture
 		Texture texture("res/textures/TestTexture.png");
@@ -127,7 +128,11 @@ int main(void)
 			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 			model.Rotate(60.0f * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
-			shader.SetUniformMat4f("u_M", model.GetModelMatrix());
+
+			modelMatrix = model.GetModelMatrix();
+			shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
+			shader.SetUniformMat3f("u_Matrix_M_Normal", glm::mat3(glm::transpose(glm::inverse(modelMatrix))));
+
 			model.Draw();
 
 			window.Update();

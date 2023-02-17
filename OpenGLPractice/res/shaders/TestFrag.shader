@@ -13,11 +13,10 @@ uniform float u_AmbientFactor;
 
 void main()
 {
-	vec3 normal = normalize(v_Normal);
 	vec3 lightDir = normalize(u_LightPos - v_Pos);
-	float diffuse = max(dot(normal, lightDir), 0.0);
+	float diffuse = max(dot(v_Normal, lightDir), 0.0);
 
 	color = vec4(u_LightColor, 1) * u_AmbientFactor + texture(u_Texture, v_Texcoord);
 	color = vec4(u_LightColor, 1) * (diffuse + u_AmbientFactor);
-	color = vec4(normal, 1);
+	color = vec4(diffuse, diffuse, diffuse, 1);
 };
