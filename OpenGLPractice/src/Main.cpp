@@ -103,8 +103,9 @@ int main(void)
 		shader.SetUniform3f("u_LightColor", pointLight.GetColor());
 		// Camera info
 		shader.SetUniform3f("u_CamPos", camera.GetPosition());
-		// Ambient factor
-		shader.SetUniform1f("u_AmbientFactor", 0.2f);
+		// Material info
+		shader.SetUniform1f("material.smoothness", exp2(5.0f));
+		shader.SetUniform1f("material.ambient", 0.2f);
 
 		// Enable blending
 		glEnable(GL_BLEND);
