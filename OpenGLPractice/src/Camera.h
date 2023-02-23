@@ -13,6 +13,8 @@ public:
 	glm::mat4 GetProjMatrix();
 	glm::mat4 GetViewMatrix();
 
+	void Update(float deltaTime);
+
 private:
 	float m_FOV;
 	glm::uvec2 m_Resolution;

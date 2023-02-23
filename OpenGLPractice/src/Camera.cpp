@@ -23,3 +23,5 @@ glm::mat4 Camera::GetViewMatrix()
 	//	0.0f, 0.0f, 0.0f, 0.0f
 	//);
 }
+
+void Camera::Update(float deltaTime) {}

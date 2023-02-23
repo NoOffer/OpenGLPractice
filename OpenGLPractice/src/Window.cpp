@@ -35,9 +35,12 @@ bool Window::Alive() { return glfwWindowShouldClose(m_Window); }
 
 void Window::Update()
 {
-	// Handle input
+	// Poll events
 	glfwPollEvents();
-	if (glfwGetKey(m_Window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+
+	// Handle input
+	if (glfwGetKey(m_Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
 		glfwSetWindowShouldClose(m_Window, true);
 	}
 
