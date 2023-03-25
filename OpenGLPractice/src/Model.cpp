@@ -98,5 +98,4 @@ void Model::Draw()
 	// Drawcall
 	//glDrawElements(GL_TRIANGLES, m_IB.GetCount(), m_IB.GetIndexType(), nullptr);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
-
 }

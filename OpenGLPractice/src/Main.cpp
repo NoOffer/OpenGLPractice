@@ -19,12 +19,14 @@
 const int WIDTH = 800;
 const int HEIGHT = 800;
 
-// ----------------------------------------------------------------------------------------------------------------------- Custom Helper Methods
+// ------------------------------------------------------------------------------------------------------------ Custom Helper Methods
 static bool LogError()
 {
 	GLenum e = glGetError();
-	if (e) {
-		while (e) {
+	if (e)
+	{
+		while (e)
+		{
 			std::cout << "[OpenGL Error] (" << e << ")" << std::endl;
 			e = glGetError();
 		}
@@ -34,12 +36,12 @@ static bool LogError()
 	return true;
 }
 
-// --------------------------------------------------------------------------------------------------------------------------------- Main Method
+// ---------------------------------------------------------------------------------------------------------------------- Main Method
 int main(void)
 {
-
-	// GLFW initialization
-	if (!glfwInit()) {
+	// GLFW initialization																						
+	if (!glfwInit())
+	{
 		std::cout << "Fail to initialize GLFW" << std::endl;
 		return -1;
 	}
@@ -48,43 +50,53 @@ int main(void)
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Create a windowed mode window and its OpenGL context
-	Window window;
-	if (!window.Init(WIDTH, HEIGHT)) {
+	// Window initialization
+	GLFWwindow* m_Window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGL Example", NULL, NULL);
+	if (m_Window == NULL)
+	{
 		glfwTerminate();
 		return -1;
 	}
+	glfwMakeContextCurrent(m_Window);																			
 
-	//// Set refresh rate
-	//glfwSwapInterval(1);
-
-	// GLAD initialization
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+	// GLAD initialization																						
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
 
-	// Print out current OpenGL version
+	// Set viewport
+	glViewport(0, 0, WIDTH, HEIGHT);
+	glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
+		{
+			glViewport(0, 0, width, height);
+		});
+
+	//// Set refresh rate																						
+	//glfwSwapInterval(1);	
+
+	// Print out current OpenGL version																			
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	{
-		// Create camera
+		// Create camera																						
 		Camera camera(45.0f, glm::uvec2(WIDTH, HEIGHT));
-		camera.Translate(0.0f, 0.0f, 3.0f);
+		camera.Translate(0.0f, 3.0f, 5.0f);
 
-		// Render content initialization
+		// Render content initialization																		
 		PointLight pointLight(glm::vec3(1.0f, 0.9f, 0.8f));
 		pointLight.Translate(-1.0f, 1.0f, 1.0f);
 		Model model = Model();
 
-		// Create shader
+		// Create shader																						
 		Shader shader(
 			"res/shaders/TestVert.shader",
 			"res/shaders/TestFrag.shader"
 		);
 		model.SetShader(shader);
 
-		// Projection matrix
+		// Projection matrix																					
 		glm::mat4 projMatrix = camera.GetProjMatrix();
 		glm::mat4 viewMatrix = camera.GetViewMatrix();
 		shader.SetUniformMat4f("u_Matrix_VP", projMatrix * viewMatrix);
@@ -92,43 +104,44 @@ int main(void)
 		shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
 		shader.SetUniformMat3f("u_Matrix_M_Normal", glm::mat3(glm::transpose(glm::inverse(modelMatrix))));
 
-		// Create texture
+		// Create texture																						
 		Texture texture("res/textures/TestTexture.png");
-		// Assign texture to shader
+		// Assign texture to shader																				
 		texture.Bind(0);
 		shader.SetUniform1i("u_Texture", 0);
 
-		// Light info
+		// Light info																							
 		shader.SetUniform3f("u_LightPos", pointLight.GetPosition());
 		shader.SetUniform3f("u_LightColor", pointLight.GetColor());
-		// Camera info
+		// Camera info																							
 		shader.SetUniform3f("u_CamPos", camera.GetPosition());
-		// Material info
+		// Material info																						
 		shader.SetUniform1f("material.smoothness", exp2(5.0f));
 		shader.SetUniform1f("material.ambient", 0.2f);
 
-		// Enable blending
+		// Enable blending																						
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		// Enable culling
+		// Enable culling																						
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
-		// Enable depth buffer
+		// Enable depth buffer																					
 		glEnable(GL_DEPTH_TEST);
 
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);															
 
 		float currentFrame = glfwGetTime();
 		float deltaTime = 0.0f;
-		// -------------------------------------------------------------------------------------------------------------------------------- Main Loop
-		while (!window.Alive()) {
-			// Calculate delta time
+		// ---------------------------------------------------------------------------------------------------------------- Main Loop
+		while (!glfwWindowShouldClose(m_Window))
+		{
+			// Calculate delta time																				
 			deltaTime = glfwGetTime() - currentFrame;
 			currentFrame = glfwGetTime();
 
-			// Clear
+			// Clear																							
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);																
 
 			model.Rotate(60.0f * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
 
@@ -138,7 +151,17 @@ int main(void)
 
 			model.Draw();
 
-			window.Update();
+			// Poll events
+			glfwPollEvents();
+
+			// Handle input
+			if (glfwGetKey(m_Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+			{
+				glfwSetWindowShouldClose(m_Window, true);
+			}
+
+			// Swap buffer
+			glfwSwapBuffers(m_Window);
 
 			LogError();
 		}
