@@ -1,4 +1,7 @@
 .vs/
 bin/
 bin-obj/
-OpenGLPractice/OpenGLPractice.vcxproj*
+OpenGLPractice/res/models
+OpenGLPractice/OpenGLPractice.filters
+OpenGLPractice/OpenGLPractice.user
+OpenGLPractice/OpenGLPractice.vcxproj.*
