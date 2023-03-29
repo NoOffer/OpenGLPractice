@@ -1,4 +1,4 @@
-#include "Model.h"
+#include "model.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -72,11 +72,6 @@ Model::Model()
 }
 
 Model::~Model() {}
-
-glm::mat4  Model::GetModelMatrix()
-{
-	return glm::scale(glm::translate(glm::mat4(1.0f), m_Position) * m_RotationMat, m_Scale);
-}
 
 void Model::Bind()
 {

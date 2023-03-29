@@ -8,16 +8,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
-// Custom abstractions
-#include "Window.h"
-#include "Camera.h"
-#include "PointLight.h"
-#include "Model.h"
-#include "Shader.h"
-#include "Texture.h"
-
-const int WIDTH = 800;
-const int HEIGHT = 800;
+#include "core/core.h"
 
 // ------------------------------------------------------------------------------------------------------------ Custom Helper Methods
 static bool LogError()
@@ -35,6 +26,9 @@ static bool LogError()
 	}
 	return true;
 }
+
+const int WIDTH = 800;
+const int HEIGHT = 800;
 
 // ---------------------------------------------------------------------------------------------------------------------- Main Method
 int main(void)
@@ -57,7 +51,7 @@ int main(void)
 		glfwTerminate();
 		return -1;
 	}
-	glfwMakeContextCurrent(m_Window);																			
+	glfwMakeContextCurrent(m_Window);
 
 	// GLAD initialization																						
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -97,8 +91,8 @@ int main(void)
 		model.SetShader(shader);
 
 		// Projection matrix																					
-		glm::mat4 projMatrix = camera.GetProjMatrix();
 		glm::mat4 viewMatrix = camera.GetViewMatrix();
+		glm::mat4 projMatrix = camera.GetProjMatrix();
 		shader.SetUniformMat4f("u_Matrix_VP", projMatrix * viewMatrix);
 		glm::mat4 modelMatrix = model.GetModelMatrix();
 		shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
@@ -108,16 +102,19 @@ int main(void)
 		Texture texture("res/textures/TestTexture.png");
 		// Assign texture to shader																				
 		texture.Bind(0);
-		shader.SetUniform1i("u_Texture", 0);
+		// Set uniforms
+		{
+			shader.SetUniform1i("u_Texture", 0);
 
-		// Light info																							
-		shader.SetUniform3f("u_LightPos", pointLight.GetPosition());
-		shader.SetUniform3f("u_LightColor", pointLight.GetColor());
-		// Camera info																							
-		shader.SetUniform3f("u_CamPos", camera.GetPosition());
-		// Material info																						
-		shader.SetUniform1f("material.smoothness", exp2(5.0f));
-		shader.SetUniform1f("material.ambient", 0.2f);
+			// Light info																							
+			shader.SetUniform3f("u_LightPos", pointLight.GetPosition());
+			shader.SetUniform3f("u_LightColor", pointLight.GetColor());
+			// Camera info																							
+			shader.SetUniform3f("u_CamPos", camera.GetPosition());
+			// Material info																						
+			shader.SetUniform1f("material.smoothness", exp2(5.0f));
+			shader.SetUniform1f("material.ambient", 0.2f);
+		}
 
 		// Enable blending																						
 		glEnable(GL_BLEND);
@@ -130,20 +127,22 @@ int main(void)
 
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);															
 
-		float currentFrame = glfwGetTime();
-		float deltaTime = 0.0f;
+		double currentTime = glfwGetTime();
+		double deltaTime = 0.0f;
+
+		float t = 0.0f;
 		// ---------------------------------------------------------------------------------------------------------------- Main Loop
 		while (!glfwWindowShouldClose(m_Window))
 		{
 			// Calculate delta time																				
-			deltaTime = glfwGetTime() - currentFrame;
-			currentFrame = glfwGetTime();
+			deltaTime = glfwGetTime() - currentTime;
+			currentTime = glfwGetTime();
 
 			// Clear																							
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);																
 
-			model.Rotate(60.0f * deltaTime, glm::vec3(0.0f, 1.0f, 0.0f));
+			model.Rotate(0.0f, 60.0f * deltaTime, 0.0f);
 
 			modelMatrix = model.GetModelMatrix();
 			shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
@@ -155,9 +154,34 @@ int main(void)
 			glfwPollEvents();
 
 			// Handle input
-			if (glfwGetKey(m_Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 			{
-				glfwSetWindowShouldClose(m_Window, true);
+				if (glfwGetKey(m_Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+				{
+					glfwSetWindowShouldClose(m_Window, true);
+				}
+				//if (glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS)
+				//{
+				//	camera.Translate(0.0f, 0.0f, 1.0f * deltaTime);
+				//}
+				//if (glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS)
+				//{
+				//	camera.Translate(0.0f, 0.0f, -1.0f * deltaTime);
+				//}
+				if (glfwGetKey(m_Window, GLFW_KEY_A) == GLFW_PRESS)
+				{
+					t -= 2.0f * deltaTime;
+					camera.SetPosition(sin(t) * 5.0f, 3.0f, cos(t) * 5.0f);
+				}
+				if (glfwGetKey(m_Window, GLFW_KEY_D) == GLFW_PRESS)
+				{
+					t += 2.0f * deltaTime;
+					camera.SetPosition(sin(t) * 5.0f, 3.0f, cos(t) * 5.0f);
+				}
+				// VP matrix
+				glm::mat4 viewMatrix = camera.GetViewMatrix();
+				shader.SetUniformMat4f("u_Matrix_VP", projMatrix * viewMatrix);
+				// Camera info																							
+				shader.SetUniform3f("u_CamPos", camera.GetPosition());
 			}
 
 			// Swap buffer

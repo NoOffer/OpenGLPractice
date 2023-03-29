@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PlaceableObj.h"
+#include "placeable_obj.h"
 
 class PointLight : public PlaceableObj
 {

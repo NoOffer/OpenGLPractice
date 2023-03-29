@@ -1,17 +1,15 @@
 #pragma once
 
-#include "PlaceableObj.h"
-#include "VertexArray.h"
-#include "IndexBuffer.h"
-#include "Shader.h"
+#include "placeable_obj.h"
+#include "vertex_array.h"
+#include "index_buffer.h"
+#include "shader.h"
 
 class Model : public PlaceableObj
 {
 public:
 	Model();
 	~Model();
-
-	glm::mat4 GetModelMatrix();
 
 	inline void SetShader(const Shader& shader) { m_Shader = shader; }
 

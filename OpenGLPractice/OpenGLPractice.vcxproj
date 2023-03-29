@@ -95,17 +95,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\basic.h" />
     <ClInclude Include="src\core\core.h" />
-    <ClInclude Include="src\core\PointLight.h" />
-    <ClInclude Include="src\core\PlaceableObj.h" />
-    <ClInclude Include="src\core\Camera.h" />
-    <ClInclude Include="src\core\IndexBuffer.h" />
-    <ClInclude Include="src\core\Model.h" />
-    <ClInclude Include="src\core\Shader.h" />
-    <ClInclude Include="src\core\Texture.h" />
-    <ClInclude Include="src\core\VertexArray.h" />
-    <ClInclude Include="src\core\VertexBuffer.h" />
-    <ClInclude Include="src\core\VertexBufferLayout.h" />
+    <ClInclude Include="src\core\point_light.h" />
+    <ClInclude Include="src\core\placeable_obj.h" />
+    <ClInclude Include="src\core\camera.h" />
+    <ClInclude Include="src\core\index_buffer.h" />
+    <ClInclude Include="src\core\model.h" />
+    <ClInclude Include="src\core\shader.h" />
+    <ClInclude Include="src\core\texture.h" />
+    <ClInclude Include="src\core\vertex_array.h" />
+    <ClInclude Include="src\core\vertex_buffer.h" />
+    <ClInclude Include="src\core\vertex_buffer_layout.h" />
     <ClInclude Include="src\vendor\glm\simd\common.h" />
     <ClInclude Include="src\vendor\glm\simd\exponential.h" />
     <ClInclude Include="src\vendor\glm\simd\geometric.h" />
@@ -128,17 +129,17 @@
     <ClInclude Include="src\vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\core\PointLight.cpp" />
-    <ClCompile Include="src\core\PlaceableObj.cpp" />
-    <ClCompile Include="src\core\Camera.cpp" />
+    <ClCompile Include="src\core\point_light.cpp" />
+    <ClCompile Include="src\core\placeable_obj.cpp" />
+    <ClCompile Include="src\core\camera.cpp" />
     <ClCompile Include="glad.c" />
-    <ClCompile Include="src\core\IndexBuffer.cpp" />
+    <ClCompile Include="src\core\index_buffer.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\core\Model.cpp" />
-    <ClCompile Include="src\core\Shader.cpp" />
-    <ClCompile Include="src\core\Texture.cpp" />
-    <ClCompile Include="src\core\VertexArray.cpp" />
-    <ClCompile Include="src\core\VertexBuffer.cpp" />
+    <ClCompile Include="src\core\model.cpp" />
+    <ClCompile Include="src\core\shader.cpp" />
+    <ClCompile Include="src\core\texture.cpp" />
+    <ClCompile Include="src\core\vertex_array.cpp" />
+    <ClCompile Include="src\core\vertex_buffer.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui.cpp" />
     <ClCompile Include="src\vendor\imgui\imgui_demo.cpp" />
