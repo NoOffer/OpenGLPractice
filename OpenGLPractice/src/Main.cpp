@@ -188,6 +188,11 @@ int main(void)
 			glfwSwapBuffers(m_Window);
 
 			LogError();
+
+			model.Rotate(0.0f, 0.5f, 0.0f);
+			glm::mat4 modelMatrix = model.GetModelMatrix();
+			shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
+			shader.SetUniformMat3f("u_Matrix_M_Normal", glm::mat3(glm::transpose(glm::inverse(modelMatrix))));
 		}
 	}
 
