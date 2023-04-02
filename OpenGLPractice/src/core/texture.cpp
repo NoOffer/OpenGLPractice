@@ -1,9 +1,5 @@
 #include "texture.h"
 
-#include <GLAD/glad.h>
-
-#include "stb_image/stb_image.h"
-
 Texture::Texture(const std::string& path)
 	:m_Filepath(path)
 {
