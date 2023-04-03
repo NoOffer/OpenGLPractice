@@ -26,5 +26,5 @@ void main()
 	float specular = pow(max(dot(v_Normal, h), 0.0), material.smoothness);
 
 	color = vec4(u_LightColor, 1) * (diffuse + specular + material.ambient) * texture(u_Texture, v_Texcoord);
-	// color = vec4(specular, specular, specular, 1);
+	color = vec4(1, 1, 1, 1);
 };

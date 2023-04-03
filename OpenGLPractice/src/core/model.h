@@ -4,7 +4,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <string>
+#include <iostream>
 
 #include "placeable_obj.h"
 #include "mesh.h"
@@ -13,19 +13,19 @@ class Model : public PlaceableObj
 {
 public:
 	Model(const char* path);
+	Model(const char* path, Shader& shader);
 
 	inline void SetShader(Shader& shader) { m_Shader = shader; }
 
 	void Draw();
 
 private:
-	void processNode(aiNode* node, const aiScene* scene);
-	Mesh processMesh(aiMesh* mesh, const aiScene* scene);
+	void ParseNode(aiNode* node, const aiScene* scene);
 	//std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
 	// model data
-	std::string directory;
-	std::vector<Mesh> meshes;
+	std::string m_Directory;
+	std::vector<Mesh> m_Meshes;
 	Shader m_Shader;
 };
 

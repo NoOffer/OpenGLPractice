@@ -1,6 +1,6 @@
 #include "texture.h"
 
-Texture::Texture(const std::string& path, const std::string& name = "")
+Texture::Texture(const std::string& path, const std::string& name)
 	: m_Filepath(path), m_Name(name)
 {
 	/*

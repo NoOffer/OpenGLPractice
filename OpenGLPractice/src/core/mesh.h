@@ -11,9 +11,9 @@
 
 struct Vertex
 {
-	glm::vec3 Position;
-	glm::vec3 Normal;
-	glm::vec2 TexCoords;
+	glm::vec3 position;
+	glm::vec3 normal;
+	glm::vec2 texCoords;
 };
 
 
@@ -21,7 +21,7 @@ class Mesh
 {
 public:
 	// mesh data
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+	Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices/*, std::vector<Texture> textures*/);
 
 	void Bind();
 	void Unbind();
@@ -30,10 +30,9 @@ public:
 
 private:
 	// render data
-	VertexBuffer m_VB;
 	IndexBuffer m_IB;
 	VertexArray m_VA;
-	std::vector<Texture> textures;
+	//std::vector<Texture> textures;
 
 	void SetupMesh();
 };

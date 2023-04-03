@@ -81,14 +81,14 @@ int main(void)
 		// Render content initialization																		
 		PointLight pointLight(glm::vec3(1.0f, 0.9f, 0.8f));
 		pointLight.Translate(-1.0f, 1.0f, 1.0f);
-		Model model = Model();
 
 		// Create shader																						
 		Shader shader(
 			"res/shaders/TestVert.shader",
 			"res/shaders/TestFrag.shader"
 		);
-		model.SetShader(shader);
+
+		Model model = Model("res/models/simple-test-models/test_cube_model.obj", shader);
 
 		// Projection matrix																					
 		glm::mat4 viewMatrix = camera.GetViewMatrix();

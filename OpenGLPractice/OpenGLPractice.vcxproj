@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;include;include\GLFW\include;include\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;include;include\GLFW\include;include\GLAD\include;include\Assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\mesh.h" />
     <ClInclude Include="src\core\basic.h" />
     <ClInclude Include="src\core\core.h" />
     <ClInclude Include="src\core\point_light.h" />
@@ -109,6 +110,7 @@
     <ClInclude Include="src\core\vertex_buffer_layout.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\mesh.cpp" />
     <ClCompile Include="src\core\point_light.cpp" />
     <ClCompile Include="src\core\placeable_obj.cpp" />
     <ClCompile Include="src\core\camera.cpp" />
