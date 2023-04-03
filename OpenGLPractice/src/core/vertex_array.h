@@ -5,8 +5,6 @@
 
 class VertexArray
 {
-private:
-	unsigned int m_RendererID;
 public:
 	VertexArray();
 	~VertexArray();
@@ -15,4 +13,7 @@ public:
 	void Unbind() const;
 
 	void SetupArray(const VertexBuffer& vb, const VertexBufferLayout& layout);
+
+private:
+	unsigned int m_RendererID;
 };

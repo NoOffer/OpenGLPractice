@@ -11,10 +11,6 @@ struct VertexBufferAttrib
 
 class VertexBufferLayout
 {
-private:
-	std::vector<VertexBufferAttrib> m_Attributes;
-	unsigned int m_Stride;  // Number of bytes of the vertex (the sum of bytes of all attributes)
-
 public:
 	VertexBufferLayout()
 		: m_Stride(0)
@@ -41,4 +37,8 @@ public:
 	inline const std::vector<VertexBufferAttrib> GetAttrib() const& { return  m_Attributes; }
 
 	inline const unsigned int GetStride() const& { return  m_Stride; }
+
+private:
+	std::vector<VertexBufferAttrib> m_Attributes;
+	unsigned int m_Stride;  // Number of bytes of the vertex (the sum of bytes of all attributes)
 };

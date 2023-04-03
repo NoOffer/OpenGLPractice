@@ -1,7 +1,7 @@
 #include "texture.h"
 
-Texture::Texture(const std::string& path)
-	:m_Filepath(path)
+Texture::Texture(const std::string& path, const std::string& name = "")
+	: m_Filepath(path), m_Name(name)
 {
 	/*
 	For .png file, pixels are loaded from top to bottom

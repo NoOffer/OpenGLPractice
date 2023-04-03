@@ -140,15 +140,7 @@ int main(void)
 
 			// Clear																							
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);																
-
-			model.Rotate(0.0f, 60.0f * deltaTime, 0.0f);
-
-			modelMatrix = model.GetModelMatrix();
-			shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
-			shader.SetUniformMat3f("u_Matrix_M_Normal", glm::mat3(glm::transpose(glm::inverse(modelMatrix))));
-
-			model.Draw();
+			//glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 			// Poll events
 			glfwPollEvents();
@@ -193,6 +185,14 @@ int main(void)
 			glm::mat4 modelMatrix = model.GetModelMatrix();
 			shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
 			shader.SetUniformMat3f("u_Matrix_M_Normal", glm::mat3(glm::transpose(glm::inverse(modelMatrix))));
+
+			model.Rotate(0.0f, 60.0f * deltaTime, 0.0f);
+
+			modelMatrix = model.GetModelMatrix();
+			shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
+			shader.SetUniformMat3f("u_Matrix_M_Normal", glm::mat3(glm::transpose(glm::inverse(modelMatrix))));
+
+			model.Draw();
 		}
 	}
 
