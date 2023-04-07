@@ -88,7 +88,11 @@ int main(void)
 			"res/shaders/TestFrag.shader"
 		);
 
-		Model model = Model("res/models/simple-test-models/test_cube_model.obj", shader);
+		//Model model = Model("res/models/simple-test-models/test_cube_model.obj", shader);
+		Model model = Model(
+			"res/models/snowy-mountain-v2-terrain/source/SnowyMountain_V2_SF/model/SnowyMountain_V2_Mesh.obj",
+			shader
+		);
 
 		// Projection matrix																					
 		glm::mat4 viewMatrix = camera.GetViewMatrix();
@@ -131,6 +135,7 @@ int main(void)
 		double deltaTime = 0.0f;
 
 		float t = 0.0f;
+		float cr = 5.0f;
 		// ---------------------------------------------------------------------------------------------------------------- Main Loop
 		while (!glfwWindowShouldClose(m_Window))
 		{
@@ -151,23 +156,25 @@ int main(void)
 				{
 					glfwSetWindowShouldClose(m_Window, true);
 				}
-				//if (glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS)
-				//{
-				//	camera.Translate(0.0f, 0.0f, 1.0f * deltaTime);
-				//}
-				//if (glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS)
-				//{
-				//	camera.Translate(0.0f, 0.0f, -1.0f * deltaTime);
-				//}
+				if (glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS)
+				{
+					cr -= 2 * deltaTime;
+					camera.SetPosition(sin(t) * cr, 3.0f, cos(t) * cr);
+				}
+				if (glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS)
+				{
+					cr += 2 * deltaTime;
+					camera.SetPosition(sin(t) * cr, 3.0f, cos(t) * cr);
+				}
 				if (glfwGetKey(m_Window, GLFW_KEY_A) == GLFW_PRESS)
 				{
 					t -= 2.0f * deltaTime;
-					camera.SetPosition(sin(t) * 5.0f, 3.0f, cos(t) * 5.0f);
+					camera.SetPosition(sin(t) * cr, 3.0f, cos(t) * cr);
 				}
 				if (glfwGetKey(m_Window, GLFW_KEY_D) == GLFW_PRESS)
 				{
 					t += 2.0f * deltaTime;
-					camera.SetPosition(sin(t) * 5.0f, 3.0f, cos(t) * 5.0f);
+					camera.SetPosition(sin(t) * cr, 3.0f, cos(t) * cr);
 				}
 				// VP matrix
 				glm::mat4 viewMatrix = camera.GetViewMatrix();
@@ -176,23 +183,17 @@ int main(void)
 				shader.SetUniform3f("u_CamPos", camera.GetPosition());
 			}
 
-			// Swap buffer
-			glfwSwapBuffers(m_Window);
-
 			LogError();
 
-			model.Rotate(0.0f, 0.5f, 0.0f);
+			//model.Rotate(0.0f, 0.5f, 0.0f);
 			glm::mat4 modelMatrix = model.GetModelMatrix();
 			shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
 			shader.SetUniformMat3f("u_Matrix_M_Normal", glm::mat3(glm::transpose(glm::inverse(modelMatrix))));
 
-			model.Rotate(0.0f, 60.0f * deltaTime, 0.0f);
-
-			modelMatrix = model.GetModelMatrix();
-			shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
-			shader.SetUniformMat3f("u_Matrix_M_Normal", glm::mat3(glm::transpose(glm::inverse(modelMatrix))));
-
 			model.Draw();
+
+			// Swap buffer
+			glfwSwapBuffers(m_Window);
 		}
 	}
 

@@ -5,8 +5,8 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices/*, 
 {
 	m_VA.Bind();
 	// Vertices
-	VertexBuffer vb(&(vertices[0]), sizeof(float) * vertices.size());  // Create vertext buffer
-	VertexBufferLayout layout;										   // Create buffer layout
+	VertexBuffer vb(&(vertices[0]), sizeof(Vertex) * vertices.size());  // Create vertext buffer
+	VertexBufferLayout layout;										    // Create buffer layout
 	// Setup layout
 	layout.Push<float>(3);  // Vertex position
 	layout.Push<float>(3);  // Vertex normal

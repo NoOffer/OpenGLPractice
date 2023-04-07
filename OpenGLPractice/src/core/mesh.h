@@ -33,8 +33,6 @@ private:
 	IndexBuffer m_IB;
 	VertexArray m_VA;
 	//std::vector<Texture> textures;
-
-	void SetupMesh();
 };
 
 
