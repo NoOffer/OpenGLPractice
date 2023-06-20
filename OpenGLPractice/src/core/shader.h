@@ -3,7 +3,10 @@
 #include <unordered_map>
 #include <string>
 
-#include "glm/glm.hpp"
+#include "vector.h"
+#include "matrix.h"
+
+//#include "glm/glm.hpp"
 
 class Shader
 {
@@ -23,8 +26,11 @@ public:
 	// Set uniforms
 	void SetUniform1i(const std::string name, int i);
 	void SetUniform1f(const std::string name, float f);
-	void SetUniform3f(const std::string name, const glm::vec3& v);
+	void SetUniform3f(const std::string name, const vec3& v);
+	void SetUniform3f(const std::string name, float f0, float f1, float f2);
+	void SetUniform4f(const std::string name, const vec4& v);
 	void SetUniform4f(const std::string name, float f0, float f1, float f2, float f3);
-	void SetUniformMat3f(const std::string name, const glm::mat3& matrix);
-	void SetUniformMat4f(const std::string name, const glm::mat4& matrix);
+	//void SetUniformMat3f(const std::string name, const glm::mat3& matrix);
+	void SetUniformMat3f(const std::string name, mat3& matrix);
+	void SetUniformMat4f(const std::string name, mat4& matrix);
 };

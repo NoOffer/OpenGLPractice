@@ -6,8 +6,6 @@
 #include <fstream>
 #include <sstream>
 
-#include "glm/gtc/type_ptr.hpp"
-
 //static void ParseShader(std::string& filepath)
 //{
 //	std::ifstream stream(filepath);
@@ -157,10 +155,22 @@ void Shader::SetUniform1f(const std::string name, float f)
 	glUniform1f(GetUniformPosition(name), f);
 }
 
-void Shader::SetUniform3f(const std::string name, const glm::vec3& v)
+void Shader::SetUniform3f(const std::string name, const vec3& v)
 {
 	Bind();
 	glUniform3f(GetUniformPosition(name), v.x, v.y, v.z);
+}
+
+void Shader::SetUniform3f(const std::string name, float f0, float f1, float f2)
+{
+	Bind();
+	glUniform3f(GetUniformPosition(name), f0, f1, f2);
+}
+
+void Shader::SetUniform4f(const std::string name, const vec4& v)
+{
+	Bind();
+	glUniform4f(GetUniformPosition(name), v.x, v.y, v.z, v.w);
 }
 
 void Shader::SetUniform4f(const std::string name, float f0, float f1, float f2, float f3)
@@ -169,14 +179,20 @@ void Shader::SetUniform4f(const std::string name, float f0, float f1, float f2, 
 	glUniform4f(GetUniformPosition(name), f0, f1, f2, f3);
 }
 
-void Shader::SetUniformMat3f(const std::string name, const glm::mat3& matrix)
+//void Shader::SetUniformMat3f(const std::string name, const mat3& matrix)
+//{
+//	Bind();
+//	glUniformMatrix3fv(GetUniformPosition(name), 1, GL_FALSE, value_ptr(matrix));
+//}
+
+void Shader::SetUniformMat3f(const std::string name, mat3& matrix)
 {
 	Bind();
-	glUniformMatrix3fv(GetUniformPosition(name), 1, GL_FALSE, glm::value_ptr(matrix));
+	glUniformMatrix3fv(GetUniformPosition(name), 1, GL_TRUE, &(matrix[0][0]));
 }
 
-void Shader::SetUniformMat4f(const std::string name, const glm::mat4& matrix)
+void Shader::SetUniformMat4f(const std::string name, mat4& matrix)
 {
 	Bind();
-	glUniformMatrix4fv(GetUniformPosition(name), 1, GL_FALSE, glm::value_ptr(matrix));
+	glUniformMatrix4fv(GetUniformPosition(name), 1, GL_TRUE, &(matrix[0][0]));
 }

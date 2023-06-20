@@ -1,6 +1,7 @@
 #pragma once
 
-#include "glm/gtc/matrix_transform.hpp"
+#include "vector.h"
+#include "matrix.h"
 
 enum class Space
 {
@@ -13,32 +14,34 @@ public:
 	PlaceableObj();
 	virtual ~PlaceableObj() {}
 
-	inline glm::vec3 GetPosition() { return m_Position; }
+	inline vec3 GetPosition() { return m_Position; }
 
-	virtual inline void SetPosition(glm::vec3 v) { m_Position = v; m_ModelMatrixAvailable = false; }
-	virtual inline void SetPosition(float x, float y, float z) { m_Position = glm::vec3(x, y, z); m_ModelMatrixAvailable = false; }
-	virtual inline void Translate(glm::vec3 v) { m_Position += v; m_ModelMatrixAvailable = false; }
-	virtual inline void Translate(float x, float y, float z) { m_Position += glm::vec3(x, y, z); m_ModelMatrixAvailable = false; }
+	virtual inline void SetPosition(vec3 v) { m_Position = v; m_ModelMatrixAvailable = false; }
+	virtual inline void SetPosition(float x, float y, float z) { m_Position = vec3(x, y, z); m_ModelMatrixAvailable = false; }
+	virtual inline void Translate(vec3 v) { m_Position += v; m_ModelMatrixAvailable = false; }
+	virtual inline void Translate(float x, float y, float z) { m_Position += vec3(x, y, z); m_ModelMatrixAvailable = false; }
 
-	virtual inline void SetRotation(glm::vec3 v) { m_Rotation = v; m_ModelMatrixAvailable = false; }
-	virtual inline void SetRotation(float x, float y, float z) { m_Rotation = glm::vec3(x, y, z); m_ModelMatrixAvailable = false; }
-	virtual inline void Rotate(glm::vec3 v) { m_Rotation += v; m_ModelMatrixAvailable = false; }
-	virtual inline void Rotate(float x, float y, float z) { m_Rotation += glm::vec3(x, y, z); m_ModelMatrixAvailable = false; }
+	virtual inline void SetRotation(vec3 v) { m_Rotation = v; m_ModelMatrixAvailable = false; }
+	virtual inline void SetRotation(float x, float y, float z) { m_Rotation = vec3(x, y, z); m_ModelMatrixAvailable = false; }
+	virtual inline void Rotate(vec3 v) { m_Rotation += v; m_ModelMatrixAvailable = false; }
+	virtual inline void Rotate(float x, float y, float z) { m_Rotation += vec3(x, y, z); m_ModelMatrixAvailable = false; }
 
-	virtual inline void SetScale(glm::vec3 v) { m_Scale = v; m_ModelMatrixAvailable = false; }
-	virtual inline void SetScale(float x, float y, float z) { m_Scale = glm::vec3(x, y, z); m_ModelMatrixAvailable = false; }
-	virtual inline void Scale(glm::vec3 v) { m_Scale *= v; m_ModelMatrixAvailable = false; }
+	virtual inline void SetScale(vec3 v) { m_Scale = v; m_ModelMatrixAvailable = false; }
+	virtual inline void SetScale(float x, float y, float z) { m_Scale = vec3(x, y, z); m_ModelMatrixAvailable = false; }
+	virtual inline void Scale(vec3 v) { m_Scale *= v; m_ModelMatrixAvailable = false; }
 	virtual inline void Scale(float t) { m_Scale *= t; m_ModelMatrixAvailable = false; }
-	virtual inline void Scale(float x, float y, float z) { m_Scale *= glm::vec3(x, y, z); m_ModelMatrixAvailable = false; }
+	virtual inline void Scale(float x, float y, float z) { m_Scale *= vec3(x, y, z); m_ModelMatrixAvailable = false; }
 
-	glm::mat4 GetModelMatrix();
+	mat4 GetModelMatrix();
+	mat4 GetNormalMatrix();
 
 protected:
-	glm::vec3 m_Position;
-	glm::vec3 m_Rotation;
-	glm::vec3 m_Scale;
+	vec3 m_Position;
+	vec3 m_Rotation;
+	vec3 m_Scale;
 
-	glm::mat4 m_ModelMatrix;
+	mat4 m_ModelMatrix;
+	mat4 m_NormalMatrix;
 	bool m_ModelMatrixAvailable;
 };
 

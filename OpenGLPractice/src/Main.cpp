@@ -5,8 +5,8 @@
 #include <GLFW/glfw3.h>
 
 // Helper libraries
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+//#include "glm/glm.hpp"
+//#include "glm/gtc/matrix_transform.hpp"
 
 #include "core/core.h"
 
@@ -75,12 +75,12 @@ int main(void)
 
 	{
 		// Create camera																						
-		Camera camera(45.0f, glm::uvec2(WIDTH, HEIGHT));
+		Camera camera(45.0f, vec2i(WIDTH, HEIGHT));
 		camera.Translate(0.0f, 3.0f, 5.0f);
 
 		// Render content initialization																		
-		PointLight pointLight(glm::vec3(1.0f, 0.9f, 0.8f));
-		pointLight.Translate(-1.0f, 1.0f, 1.0f);
+		PointLight pointLight(vec3(0.8f, 0.9f, 1.0f));
+		pointLight.Translate(-10.0f, 10.0f, 10.0f);
 
 		// Create shader																						
 		Shader shader(
@@ -95,30 +95,29 @@ int main(void)
 		);
 
 		// Projection matrix																					
-		glm::mat4 viewMatrix = camera.GetViewMatrix();
-		glm::mat4 projMatrix = camera.GetProjMatrix();
-		shader.SetUniformMat4f("u_Matrix_VP", projMatrix * viewMatrix);
-		glm::mat4 modelMatrix = model.GetModelMatrix();
+		mat4 viewMatrix = camera.GetViewMatrix();
+		mat4 projMatrix = camera.GetProjMatrix();
+		shader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
+		mat4 modelMatrix = model.GetModelMatrix();
 		shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
-		shader.SetUniformMat3f("u_Matrix_M_Normal", glm::mat3(glm::transpose(glm::inverse(modelMatrix))));
+		mat4 normalMatrix = model.GetNormalMatrix();
+		shader.SetUniformMat3f("u_Matrix_M_Normal", mat3(normalMatrix));
 
 		// Create texture																						
 		Texture texture("res/textures/TestTexture.png");
 		// Assign texture to shader																				
 		texture.Bind(0);
 		// Set uniforms
-		{
-			shader.SetUniform1i("u_Texture", 0);
+		shader.SetUniform1i("u_Texture", 0);
 
-			// Light info																							
-			shader.SetUniform3f("u_LightPos", pointLight.GetPosition());
-			shader.SetUniform3f("u_LightColor", pointLight.GetColor());
-			// Camera info																							
-			shader.SetUniform3f("u_CamPos", camera.GetPosition());
-			// Material info																						
-			shader.SetUniform1f("material.smoothness", exp2(5.0f));
-			shader.SetUniform1f("material.ambient", 0.2f);
-		}
+		// Light info																							
+		shader.SetUniform3f("u_LightPos", pointLight.GetPosition());
+		shader.SetUniform3f("u_LightColor", pointLight.GetColor());
+		// Camera info																							
+		shader.SetUniform3f("u_CamPos", camera.GetPosition());
+		// Material info																						
+		shader.SetUniform1f("material.smoothness", exp2(5.0f));
+		shader.SetUniform1f("material.ambient", 0.2f);
 
 		// Enable blending																						
 		glEnable(GL_BLEND);
@@ -177,8 +176,8 @@ int main(void)
 					camera.SetPosition(sin(t) * cr, 3.0f, cos(t) * cr);
 				}
 				// VP matrix
-				glm::mat4 viewMatrix = camera.GetViewMatrix();
-				shader.SetUniformMat4f("u_Matrix_VP", projMatrix * viewMatrix);
+				mat4 viewMatrix = camera.GetViewMatrix();
+				shader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
 				// Camera info																							
 				shader.SetUniform3f("u_CamPos", camera.GetPosition());
 			}
@@ -186,9 +185,10 @@ int main(void)
 			LogError();
 
 			//model.Rotate(0.0f, 0.5f, 0.0f);
-			glm::mat4 modelMatrix = model.GetModelMatrix();
+			mat4 modelMatrix = model.GetModelMatrix();
 			shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
-			shader.SetUniformMat3f("u_Matrix_M_Normal", glm::mat3(glm::transpose(glm::inverse(modelMatrix))));
+			mat4 normalMatrix = model.GetNormalMatrix();
+			shader.SetUniformMat3f("u_Matrix_M_Normal", mat3(normalMatrix));
 
 			model.Draw();
 

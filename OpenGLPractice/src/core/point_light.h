@@ -5,12 +5,12 @@
 class PointLight : public PlaceableObj
 {
 public:
-	PointLight(glm::vec3 color);
+	PointLight(vec3 color);
 	~PointLight();
 
-	inline glm::vec3 GetColor() { return m_Color; }
+	inline vec3 GetColor() { return m_Color; }
 
 private:
-	glm::vec3 m_Color;
+	vec3 m_Color;
 };
 
