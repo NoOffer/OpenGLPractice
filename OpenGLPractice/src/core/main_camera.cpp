@@ -28,10 +28,10 @@ void MainCamera::Pitch(float theta)
 	m_Pitch += theta;
 	m_Pitch = std::max(std::min(m_Pitch, 1.57f), -1.57f);
 
-	vec3 p = GetPosition();
+	vec3 p = GetPosition() - m_Center;
 	p *= m_Radius * cos(m_Pitch) / sqrt(p.x * p.x + p.z * p.z);
 	p.y = m_Radius * sin(m_Pitch);
-	SetPosition(p);
+	SetPosition(p + m_Center);
 }
 
 void MainCamera::Yaw(float theta)
@@ -40,29 +40,40 @@ void MainCamera::Yaw(float theta)
 	if (m_Yaw > 3.14f) m_Yaw -= 6.28f;
 	else if (m_Yaw < -3.14f) m_Yaw += 6.28f;
 
-	vec3 p = GetPosition();
+	vec3 p = GetPosition() - m_Center;
 	float hR = -abs(m_Radius * cos(m_Pitch));
 	p.x = hR * sin(m_Yaw);
 	p.z = hR * cos(m_Yaw);
-	SetPosition(p);
+	SetPosition(p + m_Center);
 }
 
-void MainCamera::IncreaseRadius(float dR)
+void MainCamera::IncreaseRadius(float dr)
 {
-	m_Radius = std::max(m_Radius + std::sqrt(m_Radius) * dR * 1.2f, 0.001f);
+	m_Radius = std::max(m_Radius + std::sqrt(m_Radius) * dr * 1.2f, 0.001f);
 
-	vec3 p = GetPosition();
+	vec3 p = GetPosition() - m_Center;
 	p *= m_Radius / length(p);
-	SetPosition(p);
+	SetPosition(p + m_Center);
 }
 
-void MainCamera::DecreaseRadius(float dR)
+void MainCamera::DecreaseRadius(float dr)
 {
-	m_Radius = std::max(m_Radius - std::sqrt(m_Radius) * dR * 1.2f, 0.001f);
+	m_Radius = std::max(m_Radius - std::sqrt(m_Radius) * dr * 1.2f, 0.001f);
 
-	vec3 p = GetPosition();
+	vec3 p = GetPosition() - m_Center;
 	p *= m_Radius / length(p);
-	SetPosition(p);
+	SetPosition(p + m_Center);
+}
+
+void MainCamera::MoveCenter(float dx, float dy)
+{
+	vec3 z(normalize(m_Center - m_Position));
+	vec3 x(normalize(cross(vec3(0.0f, 1.0f, 0.0f), z)));
+	vec3 y(normalize(cross(z, x)));
+
+	vec3 moveDist = (x * dx + y * dy) * (m_Radius / 300.0f + 0.1f);
+	m_Center += moveDist;
+	Translate(moveDist);
 }
 
 mat4 MainCamera::GetViewMatrix()
@@ -70,9 +81,7 @@ mat4 MainCamera::GetViewMatrix()
 	if (!m_ViewMatrixAvailable)
 	{
 		vec3 z(normalize(m_Position - m_Center));  // By convention the z axis of camera points backward
-		if (length(z) == 0) z = vec3(0, 0, -1);
 		vec3 x(normalize(cross(vec3(0.0f, 1.0f, 0.0f), z)));
-		if (length(x) == 0) x = vec3(1, 0, 0);
 		vec3 y(normalize(cross(z, x)));
 
 		mat4 minv(

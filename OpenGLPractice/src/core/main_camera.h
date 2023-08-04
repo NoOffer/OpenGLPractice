@@ -13,8 +13,9 @@ public:
 
 	void Pitch(float theta);
 	void Yaw(float theta);
-	void IncreaseRadius(float dR);
-	void DecreaseRadius(float dR);
+	void IncreaseRadius(float dr);
+	void DecreaseRadius(float dr);
+	void MoveCenter(float dx, float dy);
 
 	mat4 GetViewMatrix();
 

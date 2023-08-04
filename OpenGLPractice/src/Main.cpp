@@ -34,6 +34,7 @@ const int VIEWPORT_WIDTH = 800;
 const int VIEWPORT_HEIGHT = 800;
 
 // Mouse callback helper variables
+bool onMovingCenter = false;
 bool onRotation = false;
 double lastCursorPosX = 0, lastCursorPosY = 0;
 
@@ -42,8 +43,15 @@ void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 	if (onRotation)
 	{
 		float dx = xpos - lastCursorPosX, dy = ypos - lastCursorPosY;
-		MainCamera::GetInstance().Pitch(dy * 0.002f);
-		MainCamera::GetInstance().Yaw(-dx * 0.002f);
+		if (onMovingCenter)
+		{
+			MainCamera::GetInstance().MoveCenter(dx, dy);
+		}
+		else
+		{
+			MainCamera::GetInstance().Pitch(dy * 0.002f);
+			MainCamera::GetInstance().Yaw(-dx * 0.002f);
+		}
 	}
 	lastCursorPosX = xpos;
 	lastCursorPosY = ypos;
@@ -209,14 +217,16 @@ int main(void)
 				{
 					camera.Yaw(0.01f);
 				}
-				if (glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS)
-				{
-					onRotation = true;
-				}
-				else if (glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_RELEASE)
-				{
-					onRotation = false;
-				}
+				onMovingCenter = glfwGetKey(m_Window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
+				onRotation = glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
+				//if (glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS)
+				//{
+				//	onRotation = true;
+				//}
+				//else if (glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_RELEASE)
+				//{
+				//	onRotation = false;
+				//}
 
 				// VP matrix
 				mat4 viewMatrix = camera.GetViewMatrix();
