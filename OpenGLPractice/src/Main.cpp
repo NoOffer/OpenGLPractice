@@ -99,6 +99,22 @@ int main(void)
 	// Print out current OpenGL version																			
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
+	// Enable blending																						
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	// Enable culling																						
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	// Enable depth test																					
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	// Mouse callbacks
+	glfwSetCursorPosCallback(m_Window, cursorPosCallback);
+	glfwSetScrollCallback(m_Window, scrollCallback);
+
 	// ImGui setup
 	GUI::Init(m_Window, "#version 330 core");
 
@@ -148,25 +164,10 @@ int main(void)
 		shader.SetUniform3f("u_CamPos", camera.GetPosition());
 		// Material info
 		shader.SetUniform1f("material.smoothness", exp2(5.0f));
-		shader.SetUniform1f("material.ambient", 0.2f);
-
-		// Enable blending																						
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		// Enable culling																						
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		// Enable depth test																					
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LESS);
-
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);														
+		shader.SetUniform1f("material.ambient", 0.2f);													
 
 		float currentTime = glfwGetTime();
 		float deltaTime = 0.0f;
-
-		glfwSetCursorPosCallback(m_Window, cursorPosCallback);
-		glfwSetScrollCallback(m_Window, scrollCallback);
 
 		vec3 clear_color = vec3(0.45f, 0.55f, 0.6f);
 		float smoothness = exp2(5.0f);
