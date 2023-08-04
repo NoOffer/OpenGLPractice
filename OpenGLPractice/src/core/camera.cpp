@@ -43,8 +43,8 @@ mat4 Camera::GetProjMatrix()
 		// Perspective
 		float nHeight = tan(m_FOV / 2);
 		float nWidth = nHeight / m_Resolution.y * m_Resolution.x;
-		float m22 = (0.1f + 100.0f) / (0.1f - 100.0f);
-		float m23 = (2 * 0.1f * 100.0f) / (0.1f - 100.0f);
+		float m22 = -100.1f / 99.9f;  // (near + far) / (near - far)
+		float m23 = -20.0f / 99.9f;  // (2 * near * far) / (near - far)
 		m_ProjMatrix = mat4(
 			1 / nWidth, 0.0f, 0.0f, 0.0f,
 			0.0f, 1 / nHeight, 0.0f, 0.0f,
@@ -57,5 +57,3 @@ mat4 Camera::GetProjMatrix()
 	//return ortho(-5.0f, 5.0f, -5.0f, 5.0f, 0.1f, 100.0f);
 	return m_ProjMatrix;
 }
-
-void Camera::Update(float deltaTime) {}

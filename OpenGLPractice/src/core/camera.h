@@ -35,9 +35,7 @@ public:
 	mat4 GetViewMatrix();
 	mat4 GetProjMatrix();
 
-	void Update(float deltaTime);
-
-private:
+protected:
 	float m_FOV;
 	vec2i m_Resolution;
 
