@@ -2,8 +2,6 @@
 
 #include "camera.h"
 
-//#include <cmath>
-
 class MainCamera : public Camera
 {
 public:

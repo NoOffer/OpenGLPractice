@@ -4,7 +4,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <iostream>
+#include "basic.h"
 
 #include "placeable_obj.h"
 #include "mesh.h"

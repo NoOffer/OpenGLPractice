@@ -13,6 +13,7 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<unsigned int>& indices/*, 
 	layout.Push<float>(2);  // Vertex texcoord
 	// Bind vb and layout to va
 	m_VA.SetupArray(vb, layout);
+	m_VA.Unbind();
 }
 
 void Mesh::Bind()

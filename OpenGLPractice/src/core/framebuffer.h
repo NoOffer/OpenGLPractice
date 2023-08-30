@@ -2,11 +2,11 @@
 
 #include "basic.h"
 
-class VertexBuffer
+class FrameBuffer
 {
 public:
-	VertexBuffer(const void* data, unsigned int size);
-	~VertexBuffer();
+	FrameBuffer();
+	~FrameBuffer();
 
 	void Bind() const;
 	void Unbind() const;
@@ -14,3 +14,4 @@ public:
 private:
 	unsigned int m_RendererID;
 };
+

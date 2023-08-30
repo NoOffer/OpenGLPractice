@@ -104,7 +104,7 @@ int main(void)
 	// Set refresh rate																						
 	glfwSwapInterval(1);
 
-	// Print out current OpenGL version																			
+	// Print out current OpenGL version
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	// Enable blending																						
@@ -116,8 +116,12 @@ int main(void)
 	// Enable depth test																					
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+	//// Enable stencil test
+	//glEnable(GL_STENCIL_TEST);
+	//glStencilFunc(GL_EQUAL, 1, 0xFF);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	// Render as wireframes
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	// Mouse callbacks
 	glfwSetCursorPosCallback(m_Window, cursorPosCallback);
@@ -132,9 +136,19 @@ int main(void)
 		MainCamera& camera = MainCamera::GetInstance();
 		camera.Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
 
-		// Render content initialization																		
+		// Light																	
 		PointLight pointLight(vec3(0.8f, 0.9f, 1.0f));
 		pointLight.Translate(-10.0f, 10.0f, 10.0f);
+
+		// Skybox
+		CubeTexture skybox(
+			"res/textures/cube_maps/ocean_and_sky/skyrender0001.bmp",
+			"res/textures/cube_maps/ocean_and_sky/skyrender0004.bmp",
+			"res/textures/cube_maps/ocean_and_sky/skyrender0003.bmp",
+			"res/textures/cube_maps/ocean_and_sky/skyrender0006.bmp",
+			"res/textures/cube_maps/ocean_and_sky/skyrender0005.bmp",
+			"res/textures/cube_maps/ocean_and_sky/skyrender0002.bmp"
+		);
 
 		// Create shader																						
 		Shader shader(
@@ -171,14 +185,14 @@ int main(void)
 		// Camera info																							
 		shader.SetUniform3f("u_CamPos", camera.GetPosition());
 		// Material info
-		shader.SetUniform1f("material.smoothness", exp2(5.0f));
-		shader.SetUniform1f("material.ambient", 0.2f);													
+		shader.SetUniform1f("material.smoothness", 50.0f);
+		shader.SetUniform1f("material.ambient", 0.2f);
 
 		float currentTime = glfwGetTime();
 		float deltaTime = 0.0f;
 
 		vec3 clear_color = vec3(0.45f, 0.55f, 0.6f);
-		float smoothness = exp2(5.0f);
+		float smoothness = 50.0f;
 		// ---------------------------------------------------------------------------------------------------------------- Main Loop
 		while (!glfwWindowShouldClose(m_Window))
 		{
@@ -189,7 +203,7 @@ int main(void)
 			currentTime = (float)glfwGetTime();
 
 			// Clear																							
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			glClearColor(clear_color.x, clear_color.y, clear_color.z, 1.0f);
 
 			// Poll events

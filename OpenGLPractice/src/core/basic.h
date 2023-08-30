@@ -1,8 +1,9 @@
 #pragma once
 
+#include <GLAD/glad.h>
 #include <iostream>
 
-#define Log(x) std::cout << x << std::endl
+#define Log(x) std::cout << (x) << std::endl
 
 //inline std::ostream& operator<<(std::ostream& ostr, glm::vec2 const& v)
 //{
