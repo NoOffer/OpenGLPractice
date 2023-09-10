@@ -1,7 +1,7 @@
 #pragma once
 
 #include "basic.h"
-#include "cube_texture.h"
+#include "cube_map.h"
 #include "gui.h"
 #include "main_camera.h"
 #include "model.h"

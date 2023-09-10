@@ -4,10 +4,11 @@
 
 #include "stb_image/stb_image.h"
 
-class CubeTexture
+class CubeMap
 {
 public:
-	CubeTexture(
+	CubeMap(const std::string& name = "");
+	CubeMap(
 		const std::string& pos_x_path,
 		const std::string& neg_x_path,
 		const std::string& pos_y_path,
@@ -16,7 +17,7 @@ public:
 		const std::string& neg_z_path,
 		const std::string& name = ""
 	);
-	~CubeTexture();
+	~CubeMap();
 
 	void Bind(unsigned int slot = 0) const;
 	void Unbind() const;

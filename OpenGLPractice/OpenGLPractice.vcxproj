@@ -95,7 +95,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\core\cube_texture.h" />
+    <ClInclude Include="src\core\skybox.h" />
+    <ClInclude Include="src\core\cube_map.h" />
     <ClInclude Include="src\core\framebuffer.h" />
     <ClInclude Include="include\imgui\imgui_impl_opengl3_loader.h" />
     <ClInclude Include="src\core\gui.h" />
@@ -125,7 +126,8 @@
     <ClInclude Include="src\core\vertex_buffer_layout.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\core\cube_texture.cpp" />
+    <ClCompile Include="src\core\skybox.cpp" />
+    <ClCompile Include="src\core\cube_map.cpp" />
     <ClCompile Include="src\core\framebuffer.cpp" />
     <ClCompile Include="src\core\gui.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />

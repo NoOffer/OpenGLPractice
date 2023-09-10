@@ -132,16 +132,15 @@ int main(void)
 
 	// Render contents & main loop
 	{
-		// Create camera																						
-		MainCamera& camera = MainCamera::GetInstance();
-		camera.Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
+		// Create camera
+		MainCamera& camera = MainCamera::Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
 
 		// Light																	
 		PointLight pointLight(vec3(0.8f, 0.9f, 1.0f));
 		pointLight.Translate(-10.0f, 10.0f, 10.0f);
 
 		// Skybox
-		CubeTexture skybox(
+		CubeMap skybox(
 			"res/textures/cube_maps/ocean_and_sky/skyrender0001.bmp",
 			"res/textures/cube_maps/ocean_and_sky/skyrender0004.bmp",
 			"res/textures/cube_maps/ocean_and_sky/skyrender0003.bmp",
@@ -150,27 +149,31 @@ int main(void)
 			"res/textures/cube_maps/ocean_and_sky/skyrender0002.bmp"
 		);
 
-		// Create shader																						
-		Shader shader(
+		// Create shader
+		Shader skyboxShader(
+			"res/shaders/SkyboxVert.shader",
+			"res/shaders/SkyboxFrag.shader"
+		);
+		Shader renderModelShader(
 			"res/shaders/TestVert.shader",
 			"res/shaders/TestFrag.shader"
 		);
 
-		//Model model = Model("res/models/simple-test-models/test_cube_model.obj", shader);
-		Model model = Model(
+		//Model box = Model("res/models/simple-test-models/test_cube_model.obj", skyboxShader);
+		Model renderModel = Model(
 			"res/models/snowy-mountain-v2-terrain/source/SnowyMountain_V2_SF/model/SnowyMountain_V2_Mesh.obj",
-			shader
+			renderModelShader
 		);
-		model.SetScale(10.0f, 10.0f, 10.0f);
+		renderModel.SetScale(10.0f, 10.0f, 10.0f);
 
 		// Projection matrix																					
 		mat4 viewMatrix = camera.GetViewMatrix();
 		mat4 projMatrix = camera.GetProjMatrix();
-		shader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
-		mat4 modelMatrix = model.GetModelMatrix();
-		shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
-		mat4 normalMatrix = model.GetNormalMatrix();
-		shader.SetUniformMat3f("u_Matrix_M_Normal", mat3(normalMatrix));
+		renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
+		mat4 modelMatrix = renderModel.GetModelMatrix();
+		renderModelShader.SetUniformMat4f("u_Matrix_M", modelMatrix);
+		mat4 normalMatrix = renderModel.GetNormalMatrix();
+		renderModelShader.SetUniformMat3f("u_Matrix_M_Normal", mat3(normalMatrix));
 
 		//// Create texture																						
 		//Texture texture("res/textures/TestTexture.png");
@@ -180,13 +183,13 @@ int main(void)
 		//shader.SetUniform1i("u_Texture", 0);
 
 		// Light info																							
-		shader.SetUniform3f("u_LightPos", pointLight.GetPosition());
-		shader.SetUniform3f("u_LightColor", pointLight.GetColor());
+		renderModelShader.SetUniform3f("u_LightPos", pointLight.GetPosition());
+		renderModelShader.SetUniform3f("u_LightColor", pointLight.GetColor());
 		// Camera info																							
-		shader.SetUniform3f("u_CamPos", camera.GetPosition());
+		renderModelShader.SetUniform3f("u_CamPos", camera.GetPosition());
 		// Material info
-		shader.SetUniform1f("material.smoothness", 50.0f);
-		shader.SetUniform1f("material.ambient", 0.2f);
+		renderModelShader.SetUniform1f("material.smoothness", 50.0f);
+		renderModelShader.SetUniform1f("material.ambient", 0.2f);
 
 		float currentTime = glfwGetTime();
 		float deltaTime = 0.0f;
@@ -244,9 +247,9 @@ int main(void)
 
 				// VP matrix
 				mat4 viewMatrix = camera.GetViewMatrix();
-				shader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
+				renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
 				// Camera info																							
-				shader.SetUniform3f("u_CamPos", camera.GetPosition());
+				renderModelShader.SetUniform3f("u_CamPos", camera.GetPosition());
 			}
 
 			GUI::NewFrame();
@@ -267,14 +270,14 @@ int main(void)
 			}
 			GUI::Render();
 
-			shader.SetUniform1f("material.smoothness", smoothness);
+			renderModelShader.SetUniform1f("material.smoothness", smoothness);
 
-			mat4 modelMatrix = model.GetModelMatrix();
-			shader.SetUniformMat4f("u_Matrix_M", modelMatrix);
-			mat4 normalMatrix = model.GetNormalMatrix();
-			shader.SetUniformMat3f("u_Matrix_M_Normal", mat3(normalMatrix));
+			mat4 modelMatrix = renderModel.GetModelMatrix();
+			renderModelShader.SetUniformMat4f("u_Matrix_M", modelMatrix);
+			mat4 normalMatrix = renderModel.GetNormalMatrix();
+			renderModelShader.SetUniformMat3f("u_Matrix_M_Normal", mat3(normalMatrix));
 
-			model.Draw();
+			renderModel.Draw();
 
 			// Swap buffer
 			glfwSwapBuffers(m_Window);
