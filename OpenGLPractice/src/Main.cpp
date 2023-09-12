@@ -136,7 +136,7 @@ int main(void)
 		MainCamera& camera = MainCamera::Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
 
 		// Light																	
-		PointLight pointLight(vec3(0.8f, 0.9f, 1.0f));
+		PointLight pointLight(vec3(1.0f, 1.0f, 1.0f));
 		pointLight.Translate(-10.0f, 10.0f, 10.0f);
 
 		// Skybox
@@ -261,7 +261,7 @@ int main(void)
 				ImGui::Begin("Control Panel", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
 				ImGui::ColorPicker3("Clear Color", (float*)&clear_color); // Edit 3 floats representing a color
-				ImGui::SliderFloat("Smoothness", &smoothness, 0.0f, 100.0f, "%.1f");
+				ImGui::SliderFloat("Smoothness", &smoothness, 0.0f, 10.0f, "%.1f");
 				ImGui::Text(
 					"FPS: %.0f  (Avg %.2fms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate
 				);

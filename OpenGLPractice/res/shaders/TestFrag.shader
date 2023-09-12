@@ -29,7 +29,7 @@ void main()
 	vec3 lightDir = normalize(u_LightPos - v_PosWS);
 	float diffuse = dot(v_Normal, lightDir) * 0.5 + 0.5;
 	vec3 h = normalize(u_CamPos - v_PosWS + lightDir);
-	float specular = pow(clamp(dot(v_Normal, h), 0.0, 1.0), material.smoothness);
+	float specular = pow(clamp(dot(v_Normal, h), 0.0, 1.0), material.smoothness) * material.smoothness / 10;
 
 	//color = vec4(u_LightColor, 1) * (diffuse + specular + material.ambient) * texture(u_Texture, v_Texcoord);
 	color = vec4(u_LightColor * (diffuse + specular + material.ambient), 1);
