@@ -6,9 +6,12 @@
 class Skybox
 {
 public:
-	Skybox(CubeMap cubeMap);
+	void SetCubeMap(CubeMap cubeMap);
 
 private:
+	Skybox();
+	~Skybox();
+
 	Mesh m_Mesh;
 };
 

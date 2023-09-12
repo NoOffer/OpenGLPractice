@@ -7,17 +7,17 @@ class MainCamera
 public:
 	static MainCamera& GetInstance();
 
-	static MainCamera& Init(float fov, vec2i resolution, vec3 pos);
+	static void Init(float fov, vec2i resolution, vec3 pos);
 
-	vec3 GetPosition();
-	void Pitch(float theta);
-	void Yaw(float theta);
-	void IncreaseRadius(float dr);
-	void DecreaseRadius(float dr);
-	void MoveCenter(float dx, float dy);
+	static vec3 GetPosition();
+	static void Pitch(float theta);
+	static void Yaw(float theta);
+	static void IncreaseRadius(float dr);
+	static void DecreaseRadius(float dr);
+	static void MoveCenter(float dx, float dy);
 
-	mat4 GetViewMatrix();
-	mat4 GetProjMatrix();
+	static mat4 GetViewMatrix();
+	static mat4 GetProjMatrix();
 
 private:
 	static MainCamera s_Instance;
@@ -25,16 +25,16 @@ private:
 	MainCamera();
 	~MainCamera();
 
-	float m_FOV;
-	vec2i m_Resolution;
+	static float s_FOV;
+	static vec2i s_Resolution;
 
-	mat4 m_ViewMatrix;
-	mat4 m_ProjMatrix;
-	bool m_ViewMatrixAvailable;
-	bool m_ProjMatrixAvailable;
+	static mat4 s_ViewMatrix;
+	static mat4 s_ProjMatrix;
+	static bool s_ViewMatrixAvailable;
+	static bool s_ProjMatrixAvailable;
 
-	vec3 m_Center;
-	float m_Radius;
-	float m_Pitch, m_Yaw;  // Radian
+	static vec3 s_Center;
+	static float s_Radius;
+	static float s_Pitch, s_Yaw;  // Radian
 };
 

@@ -45,12 +45,12 @@ void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 		float dx = xpos - lastCursorPosX, dy = ypos - lastCursorPosY;
 		if (onMovingCenter)
 		{
-			MainCamera::GetInstance().MoveCenter(dx, dy);
+			MainCamera::MoveCenter(dx, dy);
 		}
 		else
 		{
-			MainCamera::GetInstance().Pitch(dy * 0.002f);
-			MainCamera::GetInstance().Yaw(-dx * 0.002f);
+			MainCamera::Pitch(dy * 0.002f);
+			MainCamera::Yaw(-dx * 0.002f);
 		}
 	}
 	lastCursorPosX = xpos;
@@ -59,7 +59,7 @@ void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	MainCamera::GetInstance().DecreaseRadius(yoffset * 0.1f);
+	MainCamera::DecreaseRadius(yoffset * 0.1f);
 }
 
 // ---------------------------------------------------------------------------------------------------------------------- Main Method
@@ -132,8 +132,8 @@ int main(void)
 
 	// Render contents & main loop
 	{
-		// Create camera
-		MainCamera& camera = MainCamera::Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
+		// Init camera
+		MainCamera::Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
 
 		// Light																	
 		PointLight pointLight(vec3(1.0f, 1.0f, 1.0f));
@@ -167,8 +167,8 @@ int main(void)
 		renderModel.SetScale(10.0f, 10.0f, 10.0f);
 
 		// Projection matrix																					
-		mat4 viewMatrix = camera.GetViewMatrix();
-		mat4 projMatrix = camera.GetProjMatrix();
+		mat4 viewMatrix = MainCamera::GetViewMatrix();
+		mat4 projMatrix = MainCamera::GetProjMatrix();
 		renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
 		mat4 modelMatrix = renderModel.GetModelMatrix();
 		renderModelShader.SetUniformMat4f("u_Matrix_M", modelMatrix);
@@ -186,7 +186,7 @@ int main(void)
 		renderModelShader.SetUniform3f("u_LightPos", pointLight.GetPosition());
 		renderModelShader.SetUniform3f("u_LightColor", pointLight.GetColor());
 		// Camera info																							
-		renderModelShader.SetUniform3f("u_CamPos", camera.GetPosition());
+		renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
 		// Material info
 		renderModelShader.SetUniform1f("material.smoothness", 50.0f);
 		renderModelShader.SetUniform1f("material.ambient", 0.2f);
@@ -220,19 +220,19 @@ int main(void)
 				}
 				if (glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS)
 				{
-					camera.Pitch(0.01f);
+					MainCamera::Pitch(0.01f);
 				}
 				if (glfwGetKey(m_Window, GLFW_KEY_S) == GLFW_PRESS)
 				{
-					camera.Pitch(-0.01f);
+					MainCamera::Pitch(-0.01f);
 				}
 				if (glfwGetKey(m_Window, GLFW_KEY_A) == GLFW_PRESS)
 				{
-					camera.Yaw(-0.01f);
+					MainCamera::Yaw(-0.01f);
 				}
 				if (glfwGetKey(m_Window, GLFW_KEY_D) == GLFW_PRESS)
 				{
-					camera.Yaw(0.01f);
+					MainCamera::Yaw(0.01f);
 				}
 				onMovingCenter = glfwGetKey(m_Window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
 				onRotation = glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
@@ -246,10 +246,10 @@ int main(void)
 				//}
 
 				// VP matrix
-				mat4 viewMatrix = camera.GetViewMatrix();
+				mat4 viewMatrix = MainCamera::GetViewMatrix();
 				renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
 				// Camera info																							
-				renderModelShader.SetUniform3f("u_CamPos", camera.GetPosition());
+				renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
 			}
 
 			GUI::NewFrame();
