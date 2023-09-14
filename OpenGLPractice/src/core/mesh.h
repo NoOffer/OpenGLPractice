@@ -11,9 +11,9 @@
 
 struct Vertex
 {
-	glm::vec3 position;
-	glm::vec3 normal;
-	glm::vec2 texCoords;
+	vec3 position;
+	vec3 normal;
+	vec2 texCoords;
 };
 
 

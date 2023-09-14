@@ -6,12 +6,17 @@
 class Skybox
 {
 public:
-	void SetCubeMap(CubeMap cubeMap);
+	void static Init();
+	void static inline SetCubeMap(const CubeMap& cubeMap) { s_CubeMap = cubeMap; }
+	void static Render();
 
 private:
 	Skybox();
 	~Skybox();
 
-	Mesh m_Mesh;
+	// render data
+	static IndexBuffer s_IB;
+	static VertexArray s_VA;
+	static CubeMap s_CubeMap;
 };
 

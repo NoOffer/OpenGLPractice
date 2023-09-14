@@ -110,10 +110,10 @@ int main(void)
 	// Enable blending																						
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	// Enable culling																						
+	// Enable culling
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
-	// Enable depth test																					
+	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 	//// Enable stencil test

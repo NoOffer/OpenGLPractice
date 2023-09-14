@@ -38,11 +38,11 @@ void Model::ParseNode(aiNode* node, const aiScene* scene)
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
 			// process vertex positions, normals and texture coordinates
-			vertex.position = glm::vec3(mesh->mVertices[i].x / 2, mesh->mVertices[i].y / 2, mesh->mVertices[i].z / 2);
-			vertex.normal = glm::vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+			vertex.position = vec3(mesh->mVertices[i].x / 2, mesh->mVertices[i].y / 2, mesh->mVertices[i].z / 2);
+			vertex.normal = vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
 			if (mesh->mTextureCoords[0])  // Does the mesh contain texture coordinates?
 			{
-				vertex.texCoords = glm::vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+				vertex.texCoords = vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 			}
 
 			vertices.push_back(vertex);
