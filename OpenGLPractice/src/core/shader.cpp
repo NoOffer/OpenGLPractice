@@ -104,11 +104,6 @@ static int CreateShaderProgram(const std::string vertFilepath, const std::string
 	return programId;
 }
 
-Shader::Shader()
-{
-	m_RendererID = 0;
-}
-
 Shader::Shader(const std::string vertFilepath, const std::string fragFilepath)
 {
 	m_RendererID = CreateShaderProgram(vertFilepath, fragFilepath);

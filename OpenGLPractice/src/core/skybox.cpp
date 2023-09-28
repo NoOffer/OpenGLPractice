@@ -1,73 +1,86 @@
 #include "skybox.h"
 
-VertexArray Skybox::s_VA;
-CubeMap Skybox::s_CubeMap;
+static float vertices[24] = {
+	-1.0f,  1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f, -1.0f, -1.0f,
+	 1.0f,  1.0f,  1.0f,
+	 1.0f, -1.0f,  1.0f,
+	 1.0f,  1.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f
+};
 
-void Skybox::Init()
+static unsigned int indices[36] =
 {
-	float vertices[24] = {
-		-1.0f,  1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f
-	};
+	// X-
+	0, 1, 2,
+	2, 1, 3,
+	// Y- 
+	1, 7, 3,
+	1, 5, 7,
+	// Z- 
+	2, 3, 7,
+	2, 7, 6,
+	// X+ 
+	4, 7, 5,
+	4, 6, 7,
+	// Y+ 
+	2, 4, 0,
+	2, 6, 4,
+	// Z+ 
+	0, 4, 1,
+	4, 5, 1
+};
 
-	unsigned int indices[36] = {
-		// X-
-		1, 3, 2,
-		3, 4, 2,
-		// Y-
-		2, 4, 8,
-		2, 8, 6,
-		// Z-
-		3, 8, 4,
-		3, 7, 8,
-		// X+
-		5, 6, 8,
-		5, 8, 7,
-		// Y+
-		3, 1, 5,
-		3, 5, 7,
-		// Z+
-		1, 2, 5,
-		5, 2, 6
-	};
-
-	s_IB = IndexBuffer(indices, sizeof(int) * 36);
-
-	s_VA.Bind();
+Skybox::Skybox(const Shader& shader, const CubeMap& cubeMap) :
+	m_IB(IndexBuffer(indices, 36)),
+	m_Shader(shader),
+	m_CubeMap(cubeMap)
+{
+	m_VA.Bind();
 	// Vertices
 	VertexBuffer vb(vertices, sizeof(float) * 24);  // Create vertext buffer
 	VertexBufferLayout layout;						// Create buffer layout
 	// Setup layout
 	layout.Push<float>(3);  // Vertex position
 	// Bind vb and layout to va
-	s_VA.SetupArray(vb, layout);
-	s_VA.Unbind();
+	m_VA.SetupArray(vb, layout);
+	m_VA.Unbind();
+
+	m_Shader.SetUniform1i("u_SkyboxMap", 0);
 }
 
-void Skybox::Render()
+Skybox::~Skybox() {}
+
+void Skybox::Render(mat4 projMatrix, mat4 viewMatrix)
 {
-	// Enable culling
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
-	// Enable depth test
-	glDisable(GL_DEPTH_TEST);
+	viewMatrix[0][3] = 0.0f;
+	viewMatrix[1][3] = 0.0f;
+	viewMatrix[2][3] = 0.0f;
+	m_Shader.SetUniformMat4f("u_MatrixVP", mul(projMatrix, viewMatrix));
 
-	s_IB.Bind();
-	s_VA.Bind();
-
-	// Render something
-
-	s_IB.Unbind();
-	s_VA.Unbind();
-
-	// Restore culling setting
 	glCullFace(GL_BACK);
-	// Re-enable depth test
-	glEnable(GL_DEPTH_TEST);
+	// Disable depth write
+	glDepthMask(GL_FALSE);
+	// Set depth test to less/equal
+	glDepthFunc(GL_LEQUAL);
+
+	m_IB.Bind();
+	m_VA.Bind();
+	m_Shader.Bind();
+	m_CubeMap.Bind();
+
+	glDrawElements(GL_TRIANGLES, m_IB.GetCount(), GL_UNSIGNED_INT, indices);
+	//glDrawArrays(GL_TRIANGLES, 0, m_IB.GetCount());
+
+	m_IB.Unbind();
+	m_VA.Unbind();
+	m_Shader.Unbind();
+	m_CubeMap.Unbind();
+
+	// Re-enable depth write
+	glDepthMask(GL_TRUE);
+	// Set depth test back to less
+	glDepthFunc(GL_LESS);
 }

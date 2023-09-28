@@ -11,7 +11,7 @@ CubeMap::CubeMap(const std::string& name) : m_Name(name)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-	unsigned char* localBuffer = stbi_load("res/textures/Default/png", &m_Width, &m_Height, &m_NumChannel, 0);
+	unsigned char* localBuffer = stbi_load("res/textures/Default.png", &m_Width, &m_Height, &m_NumChannel, 0);
 	//GL_TEXTURE_CUBE_MAP_POSITIVE_X
 	//GL_TEXTURE_CUBE_MAP_NEGATIVE_X
 	//GL_TEXTURE_CUBE_MAP_POSITIVE_Y
@@ -21,6 +21,18 @@ CubeMap::CubeMap(const std::string& name) : m_Name(name)
 	for (unsigned int i = 0; i < 6; i++)
 	{
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, localBuffer);
+
+
+		GLenum e = glGetError();
+		if (e)
+		{
+			while (e)
+			{
+				std::cout << "[OpenGL Error] (" << e << ")" << std::endl;
+				e = glGetError();
+			}
+			__debugbreak();
+		}
 	}
 
 	// Unbind texture for now
@@ -84,3 +96,14 @@ CubeMap::CubeMap(
 }
 
 CubeMap::~CubeMap() {}
+
+void CubeMap::Bind(unsigned int slot) const
+{
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
+}
+
+void CubeMap::Unbind() const
+{
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+}

@@ -1,6 +1,6 @@
 #include "model.h"
 
-Model::Model(const char* path)
+Model::Model(const char* path, Shader& shader) : m_Shader(shader)
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(
@@ -16,11 +16,6 @@ Model::Model(const char* path)
 	//m_Directory = m_Directory.substr(0, m_Directory.find_last_of('/\\'));
 
 	ParseNode(scene->mRootNode, scene);
-}
-
-Model::Model(const char* path, Shader& shader) : Model(path)
-{
-	m_Shader = shader;
 }
 
 void Model::ParseNode(aiNode* node, const aiScene* scene)

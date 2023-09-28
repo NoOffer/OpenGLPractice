@@ -136,17 +136,16 @@ int main(void)
 		MainCamera::Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
 
 		// Light																	
-		PointLight pointLight(vec3(1.0f, 1.0f, 1.0f));
-		pointLight.Translate(-10.0f, 10.0f, 10.0f);
+		DirectionalLight directionalLight(vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.85f, 0.6f));
 
-		// Skybox
-		CubeMap skybox(
-			"res/textures/cube_maps/ocean_and_sky/skyrender0001.bmp",
-			"res/textures/cube_maps/ocean_and_sky/skyrender0004.bmp",
-			"res/textures/cube_maps/ocean_and_sky/skyrender0003.bmp",
-			"res/textures/cube_maps/ocean_and_sky/skyrender0006.bmp",
-			"res/textures/cube_maps/ocean_and_sky/skyrender0005.bmp",
-			"res/textures/cube_maps/ocean_and_sky/skyrender0002.bmp"
+		// Skybox cubemap
+		CubeMap skyboxCubeMap(
+			"res/textures/cube_maps/tut_skymap/right.jpg",
+			"res/textures/cube_maps/tut_skymap/left.jpg",
+			"res/textures/cube_maps/tut_skymap/top.jpg",
+			"res/textures/cube_maps/tut_skymap/bottom.jpg",
+			"res/textures/cube_maps/tut_skymap/front.jpg",
+			"res/textures/cube_maps/tut_skymap/back.jpg"
 		);
 
 		// Create shader
@@ -159,8 +158,10 @@ int main(void)
 			"res/shaders/TestFrag.shader"
 		);
 
-		//Model box = Model("res/models/simple-test-models/test_cube_model.obj", skyboxShader);
-		Model renderModel = Model(
+		// Skybox
+		Skybox skybox(skyboxShader, skyboxCubeMap);
+		//Model box("res/models/simple-test-models/test_cube_model.obj", skyboxShader);
+		Model renderModel(
 			"res/models/snowy-mountain-v2-terrain/source/SnowyMountain_V2_SF/model/SnowyMountain_V2_Mesh.obj",
 			renderModelShader
 		);
@@ -183,19 +184,19 @@ int main(void)
 		//shader.SetUniform1i("u_Texture", 0);
 
 		// Light info																							
-		renderModelShader.SetUniform3f("u_LightPos", pointLight.GetPosition());
-		renderModelShader.SetUniform3f("u_LightColor", pointLight.GetColor());
+		renderModelShader.SetUniform3f("u_LightDir", directionalLight.GetDirection());
+		renderModelShader.SetUniform3f("u_LightColor", directionalLight.GetColor());
 		// Camera info																							
 		renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
 		// Material info
-		renderModelShader.SetUniform1f("material.smoothness", 50.0f);
-		renderModelShader.SetUniform1f("material.ambient", 0.2f);
+		renderModelShader.SetUniform1f("smoothness", 50.0f);
+		renderModelShader.SetUniform3f("ambient", vec3(0.12f, 0.18f, 0.3f));
 
 		float currentTime = glfwGetTime();
 		float deltaTime = 0.0f;
 
 		vec3 clear_color = vec3(0.45f, 0.55f, 0.6f);
-		float smoothness = 50.0f;
+		float smoothness = 0.0f;
 		// ---------------------------------------------------------------------------------------------------------------- Main Loop
 		while (!glfwWindowShouldClose(m_Window))
 		{
@@ -244,14 +245,23 @@ int main(void)
 				//{
 				//	onRotation = false;
 				//}
-
-				// VP matrix
-				mat4 viewMatrix = MainCamera::GetViewMatrix();
-				renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
-				// Camera info																							
-				renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
 			}
 
+			// VP matrix
+			viewMatrix = MainCamera::GetViewMatrix();
+			renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
+			// Camera info																							
+			renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
+
+			renderModelShader.SetUniform1f("smoothness", smoothness);
+
+			// Render model
+			renderModel.Draw();
+
+			// Render skybox
+			skybox.Render(projMatrix, viewMatrix);
+
+			// GUI
 			GUI::NewFrame();
 			{
 				// Origin at top left
@@ -270,15 +280,6 @@ int main(void)
 			}
 			GUI::Render();
 
-			renderModelShader.SetUniform1f("material.smoothness", smoothness);
-
-			mat4 modelMatrix = renderModel.GetModelMatrix();
-			renderModelShader.SetUniformMat4f("u_Matrix_M", modelMatrix);
-			mat4 normalMatrix = renderModel.GetNormalMatrix();
-			renderModelShader.SetUniformMat3f("u_Matrix_M_Normal", mat3(normalMatrix));
-
-			renderModel.Draw();
-
 			// Swap buffer
 			glfwSwapBuffers(m_Window);
 		}
@@ -286,5 +287,6 @@ int main(void)
 
 	GUI::Shutdown();
 	glfwTerminate();
+
 	return 0;
 }

@@ -12,7 +12,6 @@
 class Model : public PlaceableObj
 {
 public:
-	Model(const char* path);
 	Model(const char* path, Shader& shader);
 
 	inline void SetShader(Shader& shader) { m_Shader = shader; }

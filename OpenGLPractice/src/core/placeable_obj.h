@@ -1,6 +1,6 @@
 #pragma once
 
-#include "matrix.h"
+#include "math/matrix.h"
 
 enum class Space
 {

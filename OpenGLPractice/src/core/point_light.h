@@ -5,8 +5,8 @@
 class PointLight : public PlaceableObj
 {
 public:
-	PointLight(vec3 color);
-	~PointLight();
+	inline PointLight(vec3 color) : m_Color(color) {}
+	inline ~PointLight() {}
 
 	inline vec3 GetColor() { return m_Color; }
 

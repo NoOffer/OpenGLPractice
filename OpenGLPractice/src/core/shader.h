@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <string>
 
-#include "matrix.h"
+#include "math/matrix.h"
 
 //#include "glm/glm.hpp"
 
@@ -15,7 +15,6 @@ private:
 
 	unsigned int GetUniformPosition(const std::string name);
 public:
-	Shader();
 	Shader(const std::string vertFilepath, const std::string fragFilepath);
 	~Shader();
 

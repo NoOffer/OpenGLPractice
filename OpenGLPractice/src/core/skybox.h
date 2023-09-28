@@ -1,22 +1,22 @@
 #pragma once
 
+#include "index_buffer.h"
+#include "vertex_array.h"
 #include "cube_map.h"
-#include "mesh.h"
+#include "shader.h"
 
 class Skybox
 {
 public:
-	void static Init();
-	void static inline SetCubeMap(const CubeMap& cubeMap) { s_CubeMap = cubeMap; }
-	void static Render();
-
-private:
-	Skybox();
+	Skybox(const Shader& shader, const CubeMap& cubeMap);
 	~Skybox();
 
-	// render data
-	static IndexBuffer s_IB;
-	static VertexArray s_VA;
-	static CubeMap s_CubeMap;
+	void Render(mat4 viewMat, mat4 projMat);
+
+private:
+	IndexBuffer m_IB;
+	VertexArray m_VA;
+	Shader m_Shader;
+	CubeMap m_CubeMap;
 };
 
