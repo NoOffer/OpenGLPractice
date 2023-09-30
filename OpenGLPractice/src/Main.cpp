@@ -154,8 +154,8 @@ int main(void)
 			"res/shaders/SkyboxFrag.shader"
 		);
 		Shader renderModelShader(
-			"res/shaders/TestVert.shader",
-			"res/shaders/TestFrag.shader"
+			"res/shaders/BasicLitVert.shader",
+			"res/shaders/BasicLitFrag.shader"
 		);
 
 		// Skybox
@@ -195,7 +195,6 @@ int main(void)
 		float currentTime = glfwGetTime();
 		float deltaTime = 0.0f;
 
-		vec3 clear_color = vec3(0.45f, 0.55f, 0.6f);
 		float smoothness = 0.0f;
 		// ---------------------------------------------------------------------------------------------------------------- Main Loop
 		while (!glfwWindowShouldClose(m_Window))
@@ -208,7 +207,7 @@ int main(void)
 
 			// Clear																							
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			glClearColor(clear_color.x, clear_color.y, clear_color.z, 1.0f);
+			//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 			// Poll events
 			glfwPollEvents();
@@ -270,7 +269,6 @@ int main(void)
 
 				ImGui::Begin("Control Panel", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-				ImGui::ColorPicker3("Clear Color", (float*)&clear_color); // Edit 3 floats representing a color
 				ImGui::SliderFloat("Smoothness", &smoothness, 0.0f, 10.0f, "%.1f");
 				ImGui::Text(
 					"FPS: %.0f  (Avg %.2fms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate
