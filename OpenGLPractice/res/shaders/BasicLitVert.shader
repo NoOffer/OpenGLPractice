@@ -8,11 +8,7 @@ out vec3 v_PosWS;
 out vec3 v_Normal;
 out vec2 v_TexCoord;
 
-layout(std140) uniform Matrices
-{
-	mat4 u_Matrix_VP;
-};
-
+uniform mat4 u_Matrix_VP;
 uniform mat4 u_Matrix_M;
 uniform mat3 u_Matrix_M_Normal;
 
