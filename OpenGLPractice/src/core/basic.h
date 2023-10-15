@@ -3,18 +3,26 @@
 #include <GLAD/glad.h>
 #include <iostream>
 
-#define Log(x) std::cout << (x) << std::endl
+//#define LogInfo(x) std::cout << (x) << std::endl
 
-//inline std::ostream& operator<<(std::ostream& ostr, glm::vec2 const& v)
-//{
-//
-//	ostr << "(" << v.x << ", " << v.y << ")";
-//	return ostr;
-//}
-//
-//inline std::ostream& operator<<(std::ostream& ostr, glm::vec3 const& v)
-//{
-//
-//	ostr << "(" << v.x << ", " << v.y << ", " << v.z << ")";
-//	return ostr;
-//}
+// ------------------------------------------------------------------------------------------------------------ Custom Helper Methods
+static void LogInfo(const char* msg) { std::cout << msg << std::endl; }
+
+static void LogWarning(const char* msg) { std::cout << "[Warning] " << msg << std::endl; }
+
+static bool LogOpenGLError(const char* extraMsg = NULL)
+{
+	GLenum e = glGetError();
+	if (e)
+	{
+		if (extraMsg) std::cout << extraMsg << std::endl;
+		while (e)
+		{
+			std::cout << "[OpenGL Error] (" << e << ")" << std::endl;
+			e = glGetError();
+		}
+		__debugbreak();
+		return false;
+	}
+	return true;
+}

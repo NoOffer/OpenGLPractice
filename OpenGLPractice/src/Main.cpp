@@ -10,23 +10,6 @@
 
 #include "core/core.h"
 
-// ------------------------------------------------------------------------------------------------------------ Custom Helper Methods
-static bool LogError()
-{
-	GLenum e = glGetError();
-	if (e)
-	{
-		while (e)
-		{
-			std::cout << "[OpenGL Error] (" << e << ")" << std::endl;
-			e = glGetError();
-		}
-		__debugbreak();
-		return false;
-	}
-	return true;
-}
-
 const int WIN_WIDTH = 1100;
 const int WIN_HEIGHT = 800;
 
@@ -105,7 +88,7 @@ int main(void)
 	glfwSwapInterval(1);
 
 	// Print out current OpenGL version
-	std::cout << glGetString(GL_VERSION) << std::endl;
+	std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
 
 	// Enable blending																						
 	glEnable(GL_BLEND);
@@ -200,7 +183,7 @@ int main(void)
 		// ---------------------------------------------------------------------------------------------------------------- Main Loop
 		while (!glfwWindowShouldClose(m_Window))
 		{
-			LogError();
+			LogOpenGLError();
 
 			// Calculate delta time																				
 			deltaTime = (float)glfwGetTime() - currentTime;
