@@ -127,7 +127,6 @@
     <ClInclude Include="src\core\vertex_buffer_layout.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\core\directional_light.cpp" />
     <ClCompile Include="src\core\cube_map.cpp" />
     <ClCompile Include="src\core\framebuffer.cpp" />
     <ClCompile Include="src\core\gui.cpp" />

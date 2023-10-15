@@ -136,7 +136,8 @@ int main(void)
 		MainCamera::Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
 
 		// Light																	
-		DirectionalLight directionalLight(vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.85f, 0.6f));
+		DirectionalLight directionalLight{ vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.85f, 0.6f) };
+		vec3 ambient = vec3(0.12f, 0.18f, 0.3f);
 
 		// Skybox cubemap
 		CubeMap skyboxCubeMap(
@@ -183,14 +184,14 @@ int main(void)
 		//// Set uniforms
 		//shader.SetUniform1i("u_Texture", 0);
 
-		// Light info																							
-		renderModelShader.SetUniform3f("u_LightDir", directionalLight.GetDirection());
-		renderModelShader.SetUniform3f("u_LightColor", directionalLight.GetColor());
+		// Light info
+		renderModelShader.SetUniform3f("u_LightDir", directionalLight.direction);
+		renderModelShader.SetUniform3f("u_LightColor", directionalLight.color);
+		renderModelShader.SetUniform3f("u_Ambient", ambient);
 		// Camera info																							
 		renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
 		// Material info
-		renderModelShader.SetUniform1f("smoothness", 50.0f);
-		renderModelShader.SetUniform3f("ambient", vec3(0.12f, 0.18f, 0.3f));
+		renderModelShader.SetUniform1f("u_Smoothness", 50.0f);
 
 		float currentTime = glfwGetTime();
 		float deltaTime = 0.0f;
@@ -249,10 +250,13 @@ int main(void)
 			// VP matrix
 			viewMatrix = MainCamera::GetViewMatrix();
 			renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
+			// Light info
+			renderModelShader.SetUniform3f("u_LightColor", directionalLight.color);
+			renderModelShader.SetUniform3f("u_Ambient", ambient);
 			// Camera info																							
 			renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
-
-			renderModelShader.SetUniform1f("smoothness", smoothness);
+			// Material info
+			renderModelShader.SetUniform1f("u_Smoothness", smoothness);
 
 			// Render model
 			renderModel.Draw();
@@ -269,6 +273,8 @@ int main(void)
 
 				ImGui::Begin("Control Panel", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
+				ImGui::ColorEdit3("Light Color", (float*)&(directionalLight.color), 16777216);
+				ImGui::ColorEdit3("Ambient Color", (float*)&(ambient), 16777216);
 				ImGui::SliderFloat("Smoothness", &smoothness, 0.0f, 10.0f, "%.1f");
 				ImGui::Text(
 					"FPS: %.0f  (Avg %.2fms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate

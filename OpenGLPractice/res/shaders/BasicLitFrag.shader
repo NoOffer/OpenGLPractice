@@ -9,9 +9,9 @@ in vec2 v_Texcoord;
 uniform sampler2D u_Texture;
 uniform vec3 u_LightDir;
 uniform vec3 u_LightColor;
+uniform vec3 u_Ambient;
 uniform vec3 u_CamPos;
-uniform float smoothness;
-uniform vec3 ambient;
+uniform float u_Smoothness;
 
 float LinearizeDepth(float depth)
 {
@@ -23,9 +23,9 @@ void main()
 {
 	float diffuse = dot(v_Normal, u_LightDir) * 0.5 + 0.5;
 	vec3 h = normalize(u_CamPos - v_PosWS + u_LightDir);
-	float specular = pow(dot(v_Normal, h), smoothness) * smoothness / 10;
+	float specular = pow(dot(v_Normal, h), u_Smoothness) * u_Smoothness / 10;
 
 	//color = vec4(u_LightColor, 1) * (diffuse + specular + material.ambient) * texture(u_Texture, v_Texcoord);
-	color =	vec4(clamp(u_LightColor * (diffuse + specular) + ambient, 0.0, 1.0), 1);
+	color =	vec4(clamp(u_LightColor * (diffuse + specular) + u_Ambient, 0.0, 1.0), 1);
 	//color = vec4(vec3(LinearizeDepth(gl_FragCoord.z)), 1.0);
 };
