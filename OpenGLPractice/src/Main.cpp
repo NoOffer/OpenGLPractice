@@ -115,6 +115,8 @@ int main(void)
 
 	// Render contents & main loop
 	{
+		FrameBuffer frameBuffer(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
+
 		// Init camera
 		MainCamera::Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
 
@@ -185,6 +187,8 @@ int main(void)
 		{
 			LogOpenGLError();
 
+			frameBuffer.BindW();
+
 			// Calculate delta time																				
 			deltaTime = (float)glfwGetTime() - currentTime;
 			currentTime = (float)glfwGetTime();
@@ -246,6 +250,14 @@ int main(void)
 
 			// Render skybox
 			skybox.Render(projMatrix, viewMatrix);
+
+			frameBuffer.UnbindW();
+			frameBuffer.BindR();
+			glBlitFramebuffer(
+				0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT,
+				0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT,
+				GL_COLOR_BUFFER_BIT, GL_NEAREST
+			);
 
 			// GUI
 			GUI::NewFrame();
