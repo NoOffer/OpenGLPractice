@@ -7,7 +7,7 @@
 class Texture
 {
 public:
-	Texture(const std::string& path, const std::string& name = "");
+	Texture(const std::string& path, int mipmapLv = 0, bool linearFilter = false, const std::string& name = "");
 	~Texture();
 
 	void Bind(unsigned int slot = 0) const;
