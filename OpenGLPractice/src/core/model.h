@@ -23,7 +23,6 @@ private:
 	//std::vector<Texture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 
 	// model data
-	std::string m_Directory;
 	std::vector<Mesh> m_Meshes;
 	Shader m_Shader;
 };

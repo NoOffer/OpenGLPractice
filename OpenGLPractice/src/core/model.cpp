@@ -12,8 +12,6 @@ Model::Model(const char* path, Shader& shader) : m_Shader(shader)
 		std::cout << "[Assimp Error] " << importer.GetErrorString() << std::endl;
 		return;
 	}
-	m_Directory = std::string(path);
-	//m_Directory = m_Directory.substr(0, m_Directory.find_last_of('/\\'));
 
 	ParseNode(scene->mRootNode, scene);
 }
@@ -27,7 +25,6 @@ void Model::ParseNode(aiNode* node, const aiScene* scene)
 
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
-		std::vector<Texture> textures;
 
 		Vertex vertex;
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -35,7 +32,7 @@ void Model::ParseNode(aiNode* node, const aiScene* scene)
 			// process vertex positions, normals and texture coordinates
 			vertex.position = vec3(mesh->mVertices[i].x / 2, mesh->mVertices[i].y / 2, mesh->mVertices[i].z / 2);
 			vertex.normal = vec3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
-			if (mesh->mTextureCoords[0])  // Does the mesh contain texture coordinates?
+			if (mesh->mTextureCoords[0])  // If the mesh contain texture coordinates
 			{
 				vertex.texCoords = vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 			}
