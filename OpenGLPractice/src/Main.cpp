@@ -120,11 +120,7 @@ int main(void)
 		// Init camera
 		MainCamera::Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
 
-		// Light																	
-		DirectionalLight directionalLight{ vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.85f, 0.6f) };
-		vec3 ambient = vec3(0.12f, 0.18f, 0.3f);
-
-		// Skybox cubemap
+		// Skybox
 		CubeMap skyboxCubeMap(
 			"res/textures/cube_maps/tut_skymap/right.jpg",
 			"res/textures/cube_maps/tut_skymap/left.jpg",
@@ -132,20 +128,22 @@ int main(void)
 			"res/textures/cube_maps/tut_skymap/bottom.jpg",
 			"res/textures/cube_maps/tut_skymap/front.jpg",
 			"res/textures/cube_maps/tut_skymap/back.jpg"
-		);
-
-		// Create shader
+		);  // cubemap
 		Shader skyboxShader(
 			"res/shaders/SkyboxVert.shader",
 			"res/shaders/SkyboxFrag.shader"
-		);
+		);  // Shader
+		Skybox skybox(skyboxShader, skyboxCubeMap);
+
+		// Light																	
+		DirectionalLight directionalLight{ vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.85f, 0.6f) };
+		vec3 ambient = vec3(0.12f, 0.18f, 0.3f);
+
+		// Create shader
 		Shader renderModelShader(
 			"res/shaders/BasicLitVert.shader",
 			"res/shaders/BasicLitFrag.shader"
 		);
-
-		// Skybox
-		Skybox skybox(skyboxShader, skyboxCubeMap);
 		//Model box("res/models/simple-test-models/test_cube_model.obj", skyboxShader);
 		Model renderModel(
 			"res/models/snowy-mountain-v2-terrain/source/SnowyMountain_V2_SF/model/SnowyMountain_V2_Mesh.obj",
@@ -188,10 +186,6 @@ int main(void)
 			LogOpenGLError();
 
 			frameBuffer.BindW();
-
-			// Calculate delta time																				
-			deltaTime = (float)glfwGetTime() - currentTime;
-			currentTime = (float)glfwGetTime();
 
 			// Clear																							
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -268,7 +262,7 @@ int main(void)
 
 				ImGui::Begin("Control Panel", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-				ImGui::ColorEdit3("Light Color", (float*)&(directionalLight.color), 16777216);
+				ImGui::ColorEdit3("Light Color", (float*)&(directionalLight.color), 16777216);  // [0.0f, 1.0f] representation
 				ImGui::ColorEdit3("Ambient Color", (float*)&(ambient), 16777216);
 				ImGui::SliderFloat("Smoothness", &smoothness, 0.0f, 10.0f, "%.1f");
 				ImGui::Text(
@@ -281,6 +275,10 @@ int main(void)
 
 			// Swap buffer
 			glfwSwapBuffers(m_Window);
+
+			// Calculate delta time																				
+			deltaTime = (float)glfwGetTime() - currentTime;
+			currentTime = (float)glfwGetTime();
 		}
 	}
 
