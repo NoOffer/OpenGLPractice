@@ -128,12 +128,8 @@ int main(void)
 			"res/textures/cube_maps/tut_skymap/bottom.jpg",
 			"res/textures/cube_maps/tut_skymap/front.jpg",
 			"res/textures/cube_maps/tut_skymap/back.jpg"
-		);  // cubemap
-		Shader skyboxShader(
-			"res/shaders/SkyboxVert.shader",
-			"res/shaders/SkyboxFrag.shader"
-		);  // Shader
-		Skybox skybox(skyboxShader, skyboxCubeMap);
+		);
+		Skybox skybox(skyboxCubeMap);
 
 		// Light																	
 		DirectionalLight directionalLight{ vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.85f, 0.6f) };

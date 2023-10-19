@@ -33,9 +33,12 @@ static unsigned int indices[36] =
 	4, 5, 1
 };
 
-Skybox::Skybox(const Shader& shader, const CubeMap& cubeMap) :
+Skybox::Skybox(const CubeMap& cubeMap) :
 	m_IB(IndexBuffer(indices, 36)),
-	m_Shader(shader),
+	m_Shader(
+		"res/shaders/SkyboxVert.shader",
+		"res/shaders/SkyboxFrag.shader"
+	),
 	m_CubeMap(cubeMap)
 {
 	m_VA.Bind();

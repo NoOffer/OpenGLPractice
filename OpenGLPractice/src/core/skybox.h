@@ -8,7 +8,7 @@
 class Skybox
 {
 public:
-	Skybox(const Shader& shader, const CubeMap& cubeMap);
+	Skybox(const CubeMap& cubeMap);
 	~Skybox();
 
 	void Render(mat4 viewMat, mat4 projMat);
