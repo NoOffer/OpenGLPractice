@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\post_process.h" />
     <ClInclude Include="src\core\directional_light.h" />
     <ClInclude Include="src\core\cube_map.h" />
     <ClInclude Include="src\core\frame_buffer.h" />
@@ -127,6 +128,7 @@
     <ClInclude Include="src\core\vertex_buffer_layout.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\post_process.cpp" />
     <ClCompile Include="src\core\cube_map.cpp" />
     <ClCompile Include="src\core\frame_buffer.cpp" />
     <ClCompile Include="src\core\gui.cpp" />
