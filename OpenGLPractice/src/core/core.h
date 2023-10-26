@@ -7,6 +7,7 @@
 #include "main_camera.h"
 #include "model.h"
 #include "point_light.h"
+#include "post_process.h"
 #include "shader.h"
 #include "skybox.h"
 #include "texture.h"

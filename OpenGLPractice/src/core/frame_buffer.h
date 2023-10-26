@@ -15,7 +15,10 @@ public:
 	void BindRW() const;
 	void UnbindRW() const;
 
+	inline unsigned int GetTexID() { return m_TexID; }
+
 private:
 	unsigned int m_RendererID;
+	unsigned int m_TexID;
 };
 

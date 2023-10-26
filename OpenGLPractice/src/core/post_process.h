@@ -7,12 +7,15 @@
 class PostProcess
 {
 public:
-	PostProcess();
+	PostProcess(unsigned int srcTexID);
 	~PostProcess();
+
+	void Render();
 
 private:
 	IndexBuffer m_IB;
 	VertexArray m_VA;
-	//Shader m_Shader;
+	Shader m_Shader;
+	unsigned int m_SrcTexID;
 };
 

@@ -131,6 +131,9 @@ int main(void)
 		);
 		Skybox skybox(skyboxCubeMap);
 
+		// Post-processing
+		PostProcess postProcess(frameBuffer.GetTexID());
+
 		// Light																	
 		DirectionalLight directionalLight{ vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.85f, 0.6f) };
 		vec3 ambient = vec3(0.12f, 0.18f, 0.3f);
@@ -241,6 +244,10 @@ int main(void)
 			// Render skybox
 			skybox.Render(projMatrix, viewMatrix);
 
+			// Post process
+			postProcess.Render();
+
+			// Blit frame buffer
 			frameBuffer.UnbindW();
 			frameBuffer.BindR();
 			glBlitFramebuffer(
