@@ -25,7 +25,6 @@ void main()
 	vec3 h = normalize(u_CamPos - v_PosWS + u_LightDir);
 	float specular = pow(dot(v_Normal, h), u_Smoothness) * u_Smoothness / 10;
 
-	//color = vec4(u_LightColor, 1) * (diffuse + specular + material.ambient) * texture(u_Texture, v_Texcoord);
-	color =	vec4(clamp(u_LightColor * (diffuse + specular) + u_Ambient, 0.0, 1.0), 1);
+	color =	vec4(clamp(u_LightColor * (diffuse + specular) + u_Ambient, 0.0, 1.0), 1.0);
 	//color = vec4(vec3(LinearizeDepth(gl_FragCoord.z)), 1.0);
 };

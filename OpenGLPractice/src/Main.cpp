@@ -244,17 +244,17 @@ int main(void)
 			// Render skybox
 			skybox.Render(projMatrix, viewMatrix);
 
+			frameBuffer.UnbindW();
+			frameBuffer.BindR();
 			// Post process
 			postProcess.Render();
 
-			// Blit frame buffer
-			frameBuffer.UnbindW();
-			frameBuffer.BindR();
-			glBlitFramebuffer(
-				0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT,
-				0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT,
-				GL_COLOR_BUFFER_BIT, GL_NEAREST
-			);
+			//// Blit frame buffer
+			//glBlitFramebuffer(
+			//	0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT,
+			//	0, 0, VIEWPORT_WIDTH, VIEWPORT_HEIGHT,
+			//	GL_COLOR_BUFFER_BIT, GL_NEAREST
+			//);
 
 			// GUI
 			GUI::NewFrame();

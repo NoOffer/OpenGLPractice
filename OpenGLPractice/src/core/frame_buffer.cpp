@@ -27,13 +27,14 @@ FrameBuffer::FrameBuffer(int frameW, int frameH, bool rbDepthStencil)
 	}
 	else
 	{
-		glGenTextures(1, &m_TexID);
-		glBindTexture(GL_TEXTURE_2D, m_TexID);
+		unsigned int to;
+		glGenTextures(1, &to);
+		glBindTexture(GL_TEXTURE_2D, to);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, frameW, frameH, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_TexID, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, to, 0);
 	}
 
 	// Check framebuffer status
