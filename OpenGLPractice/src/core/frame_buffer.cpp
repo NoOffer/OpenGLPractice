@@ -1,6 +1,7 @@
 #include "frame_buffer.h"
 
 FrameBuffer::FrameBuffer(int frameW, int frameH, bool rbDepthStencil)
+	: m_Width(frameW), m_Height(frameH)
 {
 	glGenFramebuffers(1, &m_RendererID);
 
@@ -11,7 +12,7 @@ FrameBuffer::FrameBuffer(int frameW, int frameH, bool rbDepthStencil)
 	glBindTexture(GL_TEXTURE_2D, m_TexID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, frameW, frameH, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, frameW, frameH, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_TexID, 0);
 

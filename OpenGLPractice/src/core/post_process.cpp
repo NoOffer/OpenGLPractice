@@ -9,7 +9,7 @@ static float vertices[16] = {
 
 static unsigned int indices[6] =
 {
-	0, 2, 1, 
+	0, 2, 1,
 	1, 2, 3
 };
 
@@ -18,8 +18,7 @@ PostProcess::PostProcess(unsigned int srcTexID) :
 	m_Shader(
 		"res/shaders/PPVert.shader",
 		"res/shaders/PPFrag.shader"
-	),
-	m_SrcTexID(srcTexID)
+	)
 {
 	m_VA.Bind();
 	// Vertices
@@ -35,8 +34,21 @@ PostProcess::PostProcess(unsigned int srcTexID) :
 
 PostProcess::~PostProcess() {}
 
-void PostProcess::Render()
+void PostProcess::Render(FrameBuffer& srcFBO)
 {
+	unsigned int width = srcFBO.GetWidth();
+	unsigned int height = srcFBO.GetHeight();
+	FrameBuffer tmpFBO(width, height);
+
+	srcFBO.BindR();
+	tmpFBO.BindW();
+	glBlitFramebuffer(
+		0, 0, width, height,
+		0, 0, width, height,
+		GL_COLOR_BUFFER_BIT, GL_NEAREST
+	);
+	srcFBO.BindW();
+
 	glCullFace(GL_BACK);
 	// Disable depth write
 	glDepthMask(GL_FALSE);
@@ -48,7 +60,7 @@ void PostProcess::Render()
 	m_Shader.Bind();
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_SrcTexID);
+	glBindTexture(GL_TEXTURE_2D, tmpFBO.GetTexID());
 
 	m_Shader.SetUniform1i("u_Texture", 0);
 
