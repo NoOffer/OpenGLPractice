@@ -7,7 +7,8 @@
 class Texture
 {
 public:
-	Texture(const std::string& path, int mipmapLv = 0, bool linearFilter = false, const std::string& name = "");
+	Texture(int width, int height, bool alpha = true, bool linearFilter = false, const std::string& name = "");
+	Texture(const std::string& path, int mipmapLv = 0, bool alpha = true, bool linearFilter = false, const std::string& name = "");
 	~Texture();
 
 	void Bind(unsigned int slot = 0) const;
@@ -15,6 +16,8 @@ public:
 
 	inline int GetWidth() const { return m_Width; }
 	inline int GetHeight() const { return m_Height; }
+
+	inline unsigned int GetTexID() const { return m_RendererID; }
 
 private:
 	unsigned int m_RendererID;
