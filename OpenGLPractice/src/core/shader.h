@@ -9,14 +9,13 @@
 
 class Shader
 {
-private:
-	unsigned int m_RendererID;
-	std::unordered_map<std::string, int> m_UniformLocations;
-
-	unsigned int GetUniformPosition(const std::string name);
 public:
 	Shader(const std::string vertFilepath, const std::string fragFilepath);
+	Shader(const Shader& other);
+	Shader(Shader&& other) noexcept;
 	~Shader();
+
+	Shader& operator=(const Shader& other);
 
 	void Bind() const;
 	void Unbind() const;
@@ -31,4 +30,10 @@ public:
 	//void SetUniformMat3f(const std::string name, const glm::mat3& matrix);
 	void SetUniformMat3f(const std::string name, mat3& matrix);
 	void SetUniformMat4f(const std::string name, mat4& matrix);
+
+private:
+	unsigned int m_RendererID;
+	std::unordered_map<std::string, int> m_UniformLocations;
+
+	unsigned int GetUniformPosition(const std::string name);
 };

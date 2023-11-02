@@ -38,7 +38,8 @@
 static std::string ReadShader(std::string filepath)
 {
 	std::ifstream fileStream(filepath);
-	if (!fileStream.is_open()) {
+	if (!fileStream.is_open())
+	{
 		std::cout << "Failed to load shader at " << filepath << std::endl;
 		return "";
 	}
@@ -62,7 +63,8 @@ static unsigned int ComplieShader(const std::string& source, unsigned int type)
 	// Error handling
 	int status;
 	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE) {
+	if (status == GL_FALSE)
+	{
 		// Retrieve the length of the error message
 		int msgLength;
 		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &msgLength);
@@ -109,9 +111,28 @@ Shader::Shader(const std::string vertFilepath, const std::string fragFilepath)
 	m_RendererID = CreateShaderProgram(vertFilepath, fragFilepath);
 }
 
+Shader::Shader(const Shader& other)
+{
+	m_RendererID = other.m_RendererID;
+	m_UniformLocations = other.m_UniformLocations;
+}
+
+Shader::Shader(Shader&& other) noexcept
+{
+	m_RendererID = other.m_RendererID;
+	m_UniformLocations = other.m_UniformLocations;
+
+	other.m_RendererID = 0;
+}
+
 Shader::~Shader()
 {
 	glDeleteProgram(m_RendererID);
+}
+
+Shader& Shader::operator=(const Shader& other)
+{
+	return Shader(other);
 }
 
 void Shader::Bind() const
@@ -126,12 +147,14 @@ void Shader::Unbind() const
 
 unsigned int Shader::GetUniformPosition(const std::string name)
 {
-	if (m_UniformLocations.find(name) != m_UniformLocations.end()) {
+	if (m_UniformLocations.find(name) != m_UniformLocations.end())
+	{
 		return m_UniformLocations[name];
 	}
 
 	int location = glGetUniformLocation(m_RendererID, name.c_str());
-	if (location == -1) { 
+	if (location == -1)
+	{
 		std::cout << "[Warning] Uniform " << name << " does not exist." << std::endl;
 	}
 	m_UniformLocations[name] = location;
