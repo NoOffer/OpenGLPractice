@@ -14,11 +14,7 @@ static unsigned int indices[6] =
 };
 
 PostProcess::PostProcess(unsigned int srcTexID) :
-	m_IB(IndexBuffer(indices, 6)),
-	m_Shader(
-		"res/shaders/PPVert.shader",
-		"res/shaders/PPFrag.shader"
-	)
+	m_IB(IndexBuffer(indices, 6))
 {
 	m_VA.Bind();
 	// Vertices
@@ -34,46 +30,62 @@ PostProcess::PostProcess(unsigned int srcTexID) :
 
 PostProcess::~PostProcess() {}
 
+void PostProcess::AddPostProcess(const std::string ppFragFilepath)
+{
+	m_Shaders.push_back(Shader("res/shaders/PostProcessVert.shader", ppFragFilepath));
+}
+
 void PostProcess::Render(FrameBuffer& srcFBO)
 {
-	unsigned int width = srcFBO.GetWidth();
-	unsigned int height = srcFBO.GetHeight();
-	FrameBuffer tmpFBO(width, height);
+	for (Shader& s : m_Shaders)
+	{
+		unsigned int width = srcFBO.GetWidth();
+		unsigned int height = srcFBO.GetHeight();
+		FrameBuffer tmpFBO(width, height);
 
-	srcFBO.BindR();
-	tmpFBO.BindW();
-	glBlitFramebuffer(
-		0, 0, width, height,
-		0, 0, width, height,
-		GL_COLOR_BUFFER_BIT, GL_NEAREST
-	);
-	srcFBO.BindW();
+		// Copy srcFBO to tmpFBO
+		srcFBO.BindR();
+		tmpFBO.BindW();
+		glBlitFramebuffer(
+			0, 0, width, height,
+			0, 0, width, height,
+			GL_COLOR_BUFFER_BIT, GL_NEAREST
+		);
+		// Render to srcFBO
+		srcFBO.BindW();
+		tmpFBO.BindR();
 
-	glCullFace(GL_BACK);
-	// Disable depth write
-	glDepthMask(GL_FALSE);
-	// Set depth test to always
-	glDepthFunc(GL_ALWAYS);
+		// Set up render functions
+		glCullFace(GL_BACK);
+		// Disable depth write
+		glDepthMask(GL_FALSE);
+		// Set depth test to always
+		glDepthFunc(GL_ALWAYS);
 
-	m_IB.Bind();
-	m_VA.Bind();
-	m_Shader.Bind();
+		// Bind
+		m_IB.Bind();
+		m_VA.Bind();
+		s.Bind();
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, tmpFBO.GetTexID());
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, tmpFBO.GetTexID());
 
-	m_Shader.SetUniform1i("u_Texture", 0);
+		// Set uniform
+		s.SetUniform1i("u_Texture", 0);
 
-	glDrawElements(GL_TRIANGLES, m_IB.GetCount(), GL_UNSIGNED_INT, indices);
+		// Render
+		glDrawElements(GL_TRIANGLES, m_IB.GetCount(), GL_UNSIGNED_INT, indices);
 
-	//glBindTexture(GL_TEXTURE_2D, 0);
+		// Unbind everything
+		m_IB.Unbind();
+		m_VA.Unbind();
+		s.Unbind();
 
-	m_IB.Unbind();
-	m_VA.Unbind();
-	m_Shader.Unbind();
+		glBindTexture(GL_TEXTURE_2D, 0);
 
-	// Re-enable depth write
-	glDepthMask(GL_TRUE);
-	// Set depth test back to less
-	glDepthFunc(GL_LESS);
+		// Re-enable depth write
+		glDepthMask(GL_TRUE);
+		// Set depth test back to less
+		glDepthFunc(GL_LESS);
+	}
 }

@@ -133,6 +133,7 @@ int main(void)
 
 		// Post-processing
 		PostProcess postProcess(frameBuffer.GetTexID());
+		postProcess.AddPostProcess("res/shaders/GammaCorrectionPP.shader");
 
 		// Light																	
 		DirectionalLight directionalLight{ vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.85f, 0.6f) };
@@ -241,10 +242,10 @@ int main(void)
 			// Render model
 			renderModel.Draw();
 
-			// Render skybox
-			skybox.Render(projMatrix, viewMatrix);
 			// Post process
 			postProcess.Render(frameBuffer);
+			// Render skybox
+			skybox.Render(projMatrix, viewMatrix);
 
 			frameBuffer.UnbindW();
 			frameBuffer.BindR();
