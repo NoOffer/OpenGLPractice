@@ -1,6 +1,6 @@
 #include "model.h"
 
-Model::Model(const char* path, Shader& shader) : m_Shader(shader)
+Model::Model(const char* path, Shader* shaderRef) : m_ShaderRef(shaderRef)
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(
@@ -66,5 +66,5 @@ void Model::ParseNode(aiNode* node, const aiScene* scene)
 
 void Model::Draw()
 {
-	for (unsigned int i = 0; i < m_Meshes.size(); i++) { m_Meshes[i].Draw(m_Shader); }
+	for (unsigned int i = 0; i < m_Meshes.size(); i++) { m_Meshes[i].Draw(m_ShaderRef); }
 }

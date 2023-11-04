@@ -147,7 +147,7 @@ int main(void)
 		//Model box("res/models/simple-test-models/test_cube_model.obj", skyboxShader);
 		Model renderModel(
 			"res/models/snowy-mountain-v2-terrain/source/SnowyMountain_V2_SF/model/SnowyMountain_V2_Mesh.obj",
-			renderModelShader
+			&renderModelShader
 		);
 		renderModel.SetScale(10.0f, 10.0f, 10.0f);
 

@@ -28,10 +28,10 @@ void Mesh::Unbind()
 	m_IB.Unbind();
 }
 
-void Mesh::Draw(Shader& shader)
+void Mesh::Draw(Shader* shader)
 {
 	// draw mesh
 	Bind();
-	shader.Bind();
+	if (shader) (*shader).Bind();
 	glDrawElements(GL_TRIANGLES, m_IB.GetCount(), GL_UNSIGNED_INT, 0);
 }

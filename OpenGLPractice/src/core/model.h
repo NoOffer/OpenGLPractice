@@ -12,9 +12,9 @@
 class Model : public PlaceableObj
 {
 public:
-	Model(const char* path, Shader& shader);
+	Model(const char* path, Shader* shaderRef);
 
-	inline void SetShader(Shader& shader) { m_Shader = shader; }
+	inline void SetShader(Shader* shaderRef) { m_ShaderRef = shaderRef; }
 
 	void Draw();
 
@@ -24,7 +24,7 @@ private:
 
 	// model data
 	std::vector<Mesh> m_Meshes;
-	Shader m_Shader;
+	Shader* m_ShaderRef;
 };
 
 

@@ -11,11 +11,11 @@ class Shader
 {
 public:
 	Shader(const std::string vertFilepath, const std::string fragFilepath);
-	Shader(const Shader& other);
+	//Shader(const Shader& other);
 	Shader(Shader&& other) noexcept;
 	~Shader();
 
-	Shader& operator=(const Shader& other);
+	//Shader& operator=(const Shader& other);
 
 	void Bind() const;
 	void Unbind() const;

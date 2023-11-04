@@ -111,11 +111,11 @@ Shader::Shader(const std::string vertFilepath, const std::string fragFilepath)
 	m_RendererID = CreateShaderProgram(vertFilepath, fragFilepath);
 }
 
-Shader::Shader(const Shader& other)
-{
-	m_RendererID = other.m_RendererID;
-	m_UniformLocations = other.m_UniformLocations;
-}
+//Shader::Shader(const Shader& other)
+//{
+//	m_RendererID = other.m_RendererID;
+//	m_UniformLocations = other.m_UniformLocations;
+//}
 
 Shader::Shader(Shader&& other) noexcept
 {
@@ -130,10 +130,10 @@ Shader::~Shader()
 	glDeleteProgram(m_RendererID);
 }
 
-Shader& Shader::operator=(const Shader& other)
-{
-	return Shader(other);
-}
+//Shader& Shader::operator=(const Shader& other)
+//{
+//	return Shader(other);
+//}
 
 void Shader::Bind() const
 {
