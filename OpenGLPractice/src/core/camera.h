@@ -35,7 +35,7 @@ public:
 	mat4 GetViewMatrix();
 	mat4 GetProjMatrix();
 
-protected:
+private:
 	float m_FOV;
 	vec2i m_Resolution;
 
