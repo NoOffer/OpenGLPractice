@@ -150,7 +150,7 @@ int main(void)
 		);
 		renderModel.SetScale(10.0f, 10.0f, 10.0f);
 
-		// Projection matrix																					
+		// Projection matrix
 		mat4 viewMatrix = MainCamera::GetViewMatrix();
 		mat4 projMatrix = MainCamera::GetProjMatrix();
 		renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
@@ -161,7 +161,7 @@ int main(void)
 
 		//// Create texture																						
 		//Texture texture("res/textures/TestTexture.png");
-		//// Assign texture to shader																				
+		//// Assign texture to shader
 		//texture.Bind(0);
 		//// Set uniforms
 		//shader.SetUniform1i("u_Texture", 0);
@@ -170,7 +170,7 @@ int main(void)
 		renderModelShader.SetUniform3f("u_LightDir", directionalLight.direction);
 		renderModelShader.SetUniform3f("u_LightColor", directionalLight.color);
 		renderModelShader.SetUniform3f("u_Ambient", ambient);
-		// Camera info																							
+		// Camera info
 		renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
 		// Material info
 		renderModelShader.SetUniform1f("u_Smoothness", 50.0f);
@@ -179,7 +179,7 @@ int main(void)
 		float deltaTime = 0.0f;
 
 		float smoothness = 0.0f;
-		// ---------------------------------------------------------------------------------------------------------------- Main Loop
+		// --------------------------------------------------------------------------------------------------------------- Main Loop
 		while (!glfwWindowShouldClose(m_Window))
 		{
 			LogOpenGLError();
@@ -240,11 +240,11 @@ int main(void)
 
 			// Render model
 			renderModel.Draw();
+			// Render skybox
+			skybox.Render(projMatrix, viewMatrix);
 
 			// Post process
 			postProcess.Render(frameBuffer);
-			// Render skybox
-			skybox.Render(projMatrix, viewMatrix);
 
 			frameBuffer.UnbindW();
 			frameBuffer.BindR();
