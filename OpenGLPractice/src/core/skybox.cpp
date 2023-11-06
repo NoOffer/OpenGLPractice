@@ -33,6 +33,22 @@ static unsigned int indices[36] =
 	4, 5, 1
 };
 
+Skybox::Skybox()
+	: m_IB(IndexBuffer(indices, 36)), m_Shader("res/shaders/SkyboxVert.shader", "res/shaders/SkyboxFrag.shader" ), m_CubeMap()
+{
+	m_VA.Bind();
+	// Vertices
+	VertexBuffer vb(vertices, sizeof(float) * 24);  // Create vertext buffer
+	VertexBufferLayout layout;						// Create buffer layout
+	// Setup layout
+	layout.Push<float>(3);  // Vertex position
+	// Bind vb and layout to va
+	m_VA.SetupArray(vb, layout);
+	m_VA.Unbind();
+
+	m_Shader.SetUniform1i("u_SkyboxMap", 0);
+}
+
 Skybox::Skybox(
 	const std::string& pos_x_path,
 	const std::string& neg_x_path,

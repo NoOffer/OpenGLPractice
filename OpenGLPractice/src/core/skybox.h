@@ -8,6 +8,7 @@
 class Skybox
 {
 public:
+	Skybox();
 	Skybox(
 		const std::string& pos_x_path,
 		const std::string& neg_x_path,
