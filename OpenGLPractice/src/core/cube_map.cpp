@@ -95,7 +95,10 @@ CubeMap::CubeMap(
 	}
 }
 
-CubeMap::~CubeMap() {}
+CubeMap::~CubeMap()
+{
+	glDeleteTextures(1, &m_RendererID);
+}
 
 void CubeMap::Bind(unsigned int slot) const
 {

@@ -121,7 +121,7 @@ int main(void)
 		MainCamera::Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
 
 		// Skybox
-		CubeMap skyboxCubeMap(
+		Skybox skybox(
 			"res/textures/cube_maps/tut_skymap/right.jpg",
 			"res/textures/cube_maps/tut_skymap/left.jpg",
 			"res/textures/cube_maps/tut_skymap/top.jpg",
@@ -129,7 +129,6 @@ int main(void)
 			"res/textures/cube_maps/tut_skymap/front.jpg",
 			"res/textures/cube_maps/tut_skymap/back.jpg"
 		);
-		Skybox skybox(skyboxCubeMap);
 
 		// Post-processing
 		PostProcess postProcess(frameBuffer.GetTexID());

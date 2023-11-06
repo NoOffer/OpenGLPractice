@@ -33,13 +33,26 @@ static unsigned int indices[36] =
 	4, 5, 1
 };
 
-Skybox::Skybox(const CubeMap& cubeMap) :
+Skybox::Skybox(
+	const std::string& pos_x_path,
+	const std::string& neg_x_path,
+	const std::string& pos_y_path,
+	const std::string& neg_y_path,
+	const std::string& pos_z_path,
+	const std::string& neg_z_path,
+	const std::string& name
+) :
 	m_IB(IndexBuffer(indices, 36)),
 	m_Shader(
 		"res/shaders/SkyboxVert.shader",
 		"res/shaders/SkyboxFrag.shader"
 	),
-	m_CubeMap(cubeMap)
+	m_CubeMap(
+		pos_x_path, neg_x_path,
+		pos_y_path, neg_y_path,
+		pos_z_path, neg_z_path,
+		name
+	)
 {
 	m_VA.Bind();
 	// Vertices

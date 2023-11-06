@@ -8,7 +8,15 @@
 class Skybox
 {
 public:
-	Skybox(const CubeMap& cubeMap);
+	Skybox(
+		const std::string& pos_x_path,
+		const std::string& neg_x_path,
+		const std::string& pos_y_path,
+		const std::string& neg_y_path,
+		const std::string& pos_z_path,
+		const std::string& neg_z_path,
+		const std::string& name = ""
+	);
 	~Skybox();
 
 	void Render(mat4 viewMat, mat4 projMat);
