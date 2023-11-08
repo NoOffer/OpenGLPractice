@@ -28,7 +28,7 @@ void Mesh::Unbind()
 	m_IB.Unbind();
 }
 
-void Mesh::Draw(Shader* shader)
+void Mesh::Render(Shader* shader)
 {
 	// draw mesh
 	Bind();

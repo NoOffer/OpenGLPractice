@@ -16,6 +16,14 @@ Model::Model(const char* path, Shader* shaderRef) : m_ShaderRef(shaderRef)
 	ParseNode(scene->mRootNode, scene);
 }
 
+Model::Model(Model&& other) noexcept
+{
+	m_Meshes.swap(other.m_Meshes);
+	m_ShaderRef = other.m_ShaderRef;
+
+	other.m_ShaderRef = NULL;
+}
+
 void Model::ParseNode(aiNode* node, const aiScene* scene)
 {
 	// process all the node¡¯s meshes (if any)
@@ -64,7 +72,7 @@ void Model::ParseNode(aiNode* node, const aiScene* scene)
 
 }
 
-void Model::Draw()
+void Model::Render()
 {
-	for (unsigned int i = 0; i < m_Meshes.size(); i++) { m_Meshes[i].Draw(m_ShaderRef); }
+	for (unsigned int i = 0; i < m_Meshes.size(); i++) { m_Meshes[i].Render(m_ShaderRef); }
 }

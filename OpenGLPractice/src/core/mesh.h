@@ -26,7 +26,7 @@ public:
 	void Bind();
 	void Unbind();
 
-	void Draw(Shader* shader);
+	void Render(Shader* shader);
 
 private:
 	// render data

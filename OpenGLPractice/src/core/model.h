@@ -13,10 +13,12 @@ class Model : public PlaceableObj
 {
 public:
 	Model(const char* path, Shader* shaderRef);
+	Model(Model&& other) noexcept;
+	
+	inline void SetShaderRef(Shader* shaderRef) { m_ShaderRef = shaderRef; }
+	inline Shader* GetShaderRef() { return m_ShaderRef; }
 
-	inline void SetShader(Shader* shaderRef) { m_ShaderRef = shaderRef; }
-
-	void Draw();
+	void Render();
 
 private:
 	void ParseNode(aiNode* node, const aiScene* scene);
