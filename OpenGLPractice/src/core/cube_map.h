@@ -19,11 +19,15 @@ public:
 		const std::string& neg_z_path,
 		const std::string& name = ""
 	);
+	//CubeMap(CubeMap&& other) noexcept;
 	~CubeMap();
+
+	CubeMap& operator= (CubeMap&& other) noexcept;
 
 	void Bind(unsigned int slot = 0) const;
 	void Unbind() const;
 
+	inline std::string GetName() const { return m_Name; }
 	//inline int GetWidth() const { return m_Width; }
 	//inline int GetHeight() const { return m_Height; }
 

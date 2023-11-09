@@ -96,9 +96,34 @@ CubeMap::CubeMap(
 	}
 }
 
+//CubeMap::CubeMap(CubeMap&& other) noexcept
+//{
+//	m_RendererID = other.m_RendererID;
+//	m_Name = other.m_Name;
+//	m_Width = other.m_Width;
+//	m_Height = other.m_Height;
+//	m_NumChannel = other.m_NumChannel;
+//
+//	other.m_RendererID = 0;
+//}
+
 CubeMap::~CubeMap()
 {
 	glDeleteTextures(1, &m_RendererID);
+}
+
+CubeMap& CubeMap::operator= (CubeMap&& other) noexcept
+{
+	LogWarning(other.m_Name.c_str());
+	m_RendererID = other.m_RendererID;
+	m_Name = other.m_Name;
+	m_Width = other.m_Width;
+	m_Height = other.m_Height;
+	m_NumChannel = other.m_NumChannel;
+
+	other.m_RendererID = 0;
+
+	return *this;
 }
 
 void CubeMap::Bind(unsigned int slot) const
