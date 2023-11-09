@@ -10,6 +10,12 @@ static void LogInfo(const char* msg) { std::cout << msg << std::endl; }
 
 static void LogWarning(const char* msg) { std::cout << "[Warning] " << msg << std::endl; }
 
+static void LogError(const char* err)
+{
+	std::cout << "[Error] " << err << std::endl;
+	__debugbreak();
+}
+
 static bool LogOpenGLError(const char* extraMsg = NULL)
 {
 	GLenum e = glGetError();
