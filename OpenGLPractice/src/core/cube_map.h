@@ -4,6 +4,8 @@
 
 #include "stb_image/stb_image.h"
 
+#include <fstream>
+
 class CubeMap
 {
 public:

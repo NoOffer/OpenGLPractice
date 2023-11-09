@@ -80,6 +80,8 @@ CubeMap::CubeMap(
 	//GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
 	for (unsigned int i = 0; i < 6; i++)
 	{
+		std::ifstream f(paths[i].c_str());
+		if (!f.is_open()) LogError("Texture source file not found.");
 		localBuffer = stbi_load(paths[i].c_str(), &m_Width, &m_Height, &m_NumChannel, 0);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, m_Width, m_Height, 0, GL_RGB, GL_UNSIGNED_BYTE, localBuffer);
 	}
