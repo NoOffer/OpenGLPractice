@@ -45,8 +45,6 @@ Skybox::Skybox()
 	// Bind vb and layout to va
 	m_VA.SetupArray(vb, layout);
 	m_VA.Unbind();
-
-	m_Shader.SetUniform1i("u_SkyboxMap", 0);
 }
 
 Skybox::Skybox(
@@ -79,11 +77,25 @@ Skybox::Skybox(
 	// Bind vb and layout to va
 	m_VA.SetupArray(vb, layout);
 	m_VA.Unbind();
-
-	m_Shader.SetUniform1i("u_SkyboxMap", 0);
 }
 
 Skybox::~Skybox() {}
+
+void Skybox::SetCubeMap(
+	const std::string& pos_x_path,
+	const std::string& neg_x_path,
+	const std::string& pos_y_path,
+	const std::string& neg_y_path,
+	const std::string& pos_z_path,
+	const std::string& neg_z_path
+)
+{
+	m_CubeMap = CubeMap(
+		pos_x_path, neg_x_path,
+		pos_y_path, neg_y_path,
+		pos_z_path, neg_z_path
+	);
+}
 
 void Skybox::Render(mat4 projMatrix, mat4 viewMatrix)
 {
@@ -102,6 +114,8 @@ void Skybox::Render(mat4 projMatrix, mat4 viewMatrix)
 	m_VA.Bind();
 	m_Shader.Bind();
 	m_CubeMap.Bind();
+
+	m_Shader.SetUniform1i("u_SkyboxMap", 0);
 
 	glDrawElements(GL_TRIANGLES, m_IB.GetCount(), GL_UNSIGNED_INT, indices);
 	//glDrawArrays(GL_TRIANGLES, 0, m_IB.GetCount());

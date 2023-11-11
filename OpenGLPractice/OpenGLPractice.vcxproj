@@ -119,6 +119,7 @@
     <ClInclude Include="src\core\camera.h" />
     <ClInclude Include="src\core\index_buffer.h" />
     <ClInclude Include="src\core\model.h" />
+    <ClInclude Include="src\core\scene.h" />
     <ClInclude Include="src\core\shader.h" />
     <ClInclude Include="src\core\skybox.h" />
     <ClInclude Include="src\core\texture.h" />
@@ -147,6 +148,7 @@
     <ClCompile Include="src\core\camera.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="src\core\index_buffer.cpp" />
+    <ClCompile Include="src\core\scene.cpp" />
     <ClCompile Include="src\core\skybox.cpp" />
     <ClCompile Include="src\core\math\vector.cpp" />
     <ClCompile Include="src\Main.cpp" />

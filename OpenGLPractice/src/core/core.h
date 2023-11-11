@@ -8,6 +8,7 @@
 #include "model.h"
 #include "point_light.h"
 #include "post_process.h"
+#include "scene.h"
 #include "shader.h"
 #include "skybox.h"
 #include "texture.h"

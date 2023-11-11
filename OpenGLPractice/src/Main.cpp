@@ -117,11 +117,14 @@ int main(void)
 	{
 		FrameBuffer frameBuffer(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
+		// Create scene
+		Scene scene("Main");
+
 		// Init camera
 		MainCamera::Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
 
 		// Skybox
-		Skybox skybox(
+		scene.SetSkybox(
 			"res/textures/cube_maps/tut_skymap/right.jpg",
 			"res/textures/cube_maps/tut_skymap/left.jpg",
 			"res/textures/cube_maps/tut_skymap/top.jpg",
@@ -130,34 +133,25 @@ int main(void)
 			"res/textures/cube_maps/tut_skymap/back.jpg"
 		);
 
-		// Post-processing
-		PostProcess postProcess(frameBuffer.GetTexID());
-		postProcess.AddPostProcess("res/shaders/GammaCorrectionPP.shader");
-
-		// Light																	
-		DirectionalLight directionalLight{ vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.85f, 0.6f) };
-		vec3 ambient = vec3(0.12f, 0.18f, 0.3f);
+		// Light
+		scene.SetDirectionalLight({ vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.85f, 0.6f) });
+		scene.SetAmbient(vec3(0.12f, 0.18f, 0.3f));
 
 		// Create shader
 		Shader renderModelShader(
 			"res/shaders/BasicLitVert.shader",
 			"res/shaders/BasicLitFrag.shader"
 		);
-		//Model box("res/models/simple-test-models/test_cube_model.obj", skyboxShader);
-		Model renderModel(
-			"res/models/snowy-mountain-v2-terrain/source/SnowyMountain_V2_SF/model/SnowyMountain_V2_Mesh.obj",
-			&renderModelShader
-		);
-		renderModel.SetScale(10.0f, 10.0f, 10.0f);
 
-		// Projection matrix
-		mat4 viewMatrix = MainCamera::GetViewMatrix();
-		mat4 projMatrix = MainCamera::GetProjMatrix();
-		renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
-		mat4 modelMatrix = renderModel.GetModelMatrix();
-		renderModelShader.SetUniformMat4f("u_Matrix_M", modelMatrix);
-		mat4 normalMatrix = renderModel.GetNormalMatrix();
-		renderModelShader.SetUniformMat3f("u_Matrix_M_Normal", mat3(normalMatrix));
+		// Model
+		//Model box("res/models/simple-test-models/test_cube_model.obj", skyboxShader);
+		scene.AddModel(
+			"res/models/snowy-mountain-v2-terrain/source/SnowyMountain_V2_SF/model/SnowyMountain_V2_Mesh.obj",
+			&renderModelShader,
+			vec3(0.0f),
+			vec3(0.0f),
+			vec3(10.0f, 10.0f, 10.0f)
+		);
 
 		//// Create texture																						
 		//Texture texture("res/textures/TestTexture.png");
@@ -166,19 +160,14 @@ int main(void)
 		//// Set uniforms
 		//shader.SetUniform1i("u_Texture", 0);
 
-		// Light info
-		renderModelShader.SetUniform3f("u_LightDir", directionalLight.direction);
-		renderModelShader.SetUniform3f("u_LightColor", directionalLight.color);
-		renderModelShader.SetUniform3f("u_Ambient", ambient);
-		// Camera info
-		renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
-		// Material info
-		renderModelShader.SetUniform1f("u_Smoothness", 50.0f);
+		// Post-processing
+		PostProcess postProcess(frameBuffer.GetTexID());
+		postProcess.AddPostProcess("res/shaders/GammaCorrectionPP.shader");
 
 		float currentTime = glfwGetTime();
 		float deltaTime = 0.0f;
 
-		float smoothness = 0.0f;
+		//float smoothness = 0.0f;
 		// --------------------------------------------------------------------------------------------------------------- Main Loop
 		while (!glfwWindowShouldClose(m_Window))
 		{
@@ -217,31 +206,12 @@ int main(void)
 				}
 				onMovingCenter = glfwGetKey(m_Window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS;
 				onRotation = glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
-				//if (glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS)
-				//{
-				//	onRotation = true;
-				//}
-				//else if (glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_RELEASE)
-				//{
-				//	onRotation = false;
-				//}
+				//if (glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS) { onRotation = true; }
+				//else if (glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_RELEASE) { onRotation = false; }
 			}
 
-			// VP matrix
-			viewMatrix = MainCamera::GetViewMatrix();
-			renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
-			// Light info
-			renderModelShader.SetUniform3f("u_LightColor", directionalLight.color);
-			renderModelShader.SetUniform3f("u_Ambient", ambient);
-			// Camera info																							
-			renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
-			// Material info
-			renderModelShader.SetUniform1f("u_Smoothness", smoothness);
-
-			// Render model
-			renderModel.Draw();
-			// Render skybox
-			skybox.Render(projMatrix, viewMatrix);
+			// Render scene
+			scene.Render();
 
 			// Post process
 			postProcess.Render(frameBuffer);
@@ -265,9 +235,9 @@ int main(void)
 
 				ImGui::Begin("Control Panel", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-				ImGui::ColorEdit3("Light Color", (float*)&(directionalLight.color), 16777216);  // [0.0f, 1.0f] representation
-				ImGui::ColorEdit3("Ambient Color", (float*)&(ambient), 16777216);
-				ImGui::SliderFloat("Smoothness", &smoothness, 0.0f, 10.0f, "%.1f");
+				//ImGui::ColorEdit3("Light Color", (float*)&(directionalLight.color), 16777216);  // [0.0f, 1.0f] representation
+				//ImGui::ColorEdit3("Ambient Color", (float*)&(ambient), 16777216);
+				//ImGui::SliderFloat("Smoothness", &smoothness, 0.0f, 10.0f, "%.1f");
 				ImGui::Text(
 					"FPS: %.0f  (Avg %.2fms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate
 				);

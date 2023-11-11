@@ -17,6 +17,7 @@ Model::Model(const char* path, Shader* shaderRef) : m_ShaderRef(shaderRef)
 }
 
 Model::Model(Model&& other) noexcept
+	: PlaceableObj(other)
 {
 	m_Meshes.swap(other.m_Meshes);
 	m_ShaderRef = other.m_ShaderRef;
