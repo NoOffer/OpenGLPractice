@@ -151,7 +151,7 @@
     <ClCompile Include="src\core\scene.cpp" />
     <ClCompile Include="src\core\skybox.cpp" />
     <ClCompile Include="src\core\math\vector.cpp" />
-    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\core\model.cpp" />
     <ClCompile Include="src\core\shader.cpp" />
     <ClCompile Include="src\core\texture.cpp" />
