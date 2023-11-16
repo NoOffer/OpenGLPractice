@@ -117,14 +117,14 @@ int main(void)
 	{
 		FrameBuffer frameBuffer(VIEWPORT_WIDTH, VIEWPORT_HEIGHT);
 
-		// Create scene
-		Scene scene("Main");
+		//// Create scene
+		//Scene scene("Main");
 
 		// Init camera
 		MainCamera::Init(45.0f, vec2i(WIN_WIDTH, WIN_HEIGHT), vec3(0.0f, 30.0f, 50.0f));
 
 		// Skybox
-		scene.SetSkybox(
+		Skybox skybox(
 			"res/textures/cube_maps/tut_skymap/right.jpg",
 			"res/textures/cube_maps/tut_skymap/left.jpg",
 			"res/textures/cube_maps/tut_skymap/top.jpg",
@@ -134,8 +134,8 @@ int main(void)
 		);
 
 		// Light
-		scene.SetDirectionalLight({ vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.85f, 0.6f) });
-		scene.SetAmbient(vec3(0.12f, 0.18f, 0.3f));
+		DirectionalLight directionalLight{ vec3(-1.0f, -1.0f, -1.0f), vec3(1.0f, 0.925f, 0.75f) };
+		vec3 ambient = vec3(0.08f, 0.12f, 0.175f);
 
 		// Create shader
 		Shader renderModelShader(
@@ -145,20 +145,29 @@ int main(void)
 
 		// Model
 		//Model box("res/models/simple-test-models/test_cube_model.obj", skyboxShader);
-		scene.AddModel(
+		Model testTerrain(
 			"res/models/snowy-mountain-v2-terrain/source/SnowyMountain_V2_SF/model/SnowyMountain_V2_Mesh.obj",
-			&renderModelShader,
-			vec3(0.0f),
-			vec3(0.0f),
-			vec3(10.0f, 10.0f, 10.0f)
+			&renderModelShader
 		);
+		testTerrain.SetScale(10.0f, 10.0f, 10.0f);
 
-		//// Create texture																						
-		//Texture texture("res/textures/TestTexture.png");
-		//// Assign texture to shader
-		//texture.Bind(0);
-		//// Set uniforms
-		//shader.SetUniform1i("u_Texture", 0);
+		// Projection matrix
+		mat4 viewMatrix = MainCamera::GetViewMatrix();
+		mat4 projMatrix = MainCamera::GetProjMatrix();
+		renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
+		mat4 modelMatrix = testTerrain.GetModelMatrix();
+		renderModelShader.SetUniformMat4f("u_Matrix_M", modelMatrix);
+		mat4 normalMatrix = testTerrain.GetNormalMatrix();
+		renderModelShader.SetUniformMat3f("u_Matrix_M_Normal", mat3(normalMatrix));
+
+		// Light info
+		renderModelShader.SetUniform3f("u_LightDir", directionalLight.direction);
+		renderModelShader.SetUniform3f("u_LightColor", directionalLight.color);
+		renderModelShader.SetUniform3f("u_Ambient", ambient);
+		// Camera info
+		renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
+		// Material info
+		renderModelShader.SetUniform1f("u_Smoothness", 50.0f);
 
 		// Post-processing
 		PostProcess postProcess(frameBuffer.GetTexID());
@@ -167,7 +176,7 @@ int main(void)
 		float currentTime = glfwGetTime();
 		float deltaTime = 0.0f;
 
-		//float smoothness = 0.0f;
+		float smoothness = 0.0f;
 		// --------------------------------------------------------------------------------------------------------------- Main Loop
 		while (!glfwWindowShouldClose(m_Window))
 		{
@@ -210,8 +219,21 @@ int main(void)
 				//else if (glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_RELEASE) { onRotation = false; }
 			}
 
-			// Render scene
-			scene.Render();
+			// VP matrix
+			viewMatrix = MainCamera::GetViewMatrix();
+			renderModelShader.SetUniformMat4f("u_Matrix_VP", mul(projMatrix, viewMatrix));
+			// Light info
+			renderModelShader.SetUniform3f("u_LightColor", directionalLight.color);
+			renderModelShader.SetUniform3f("u_Ambient", ambient);
+			// Camera info																							
+			renderModelShader.SetUniform3f("u_CamPos", MainCamera::GetPosition());
+			// Material info
+			renderModelShader.SetUniform1f("u_Smoothness", smoothness);
+
+			// Render model
+			testTerrain.Render();
+			// Render skybox
+			skybox.Render(projMatrix, viewMatrix);
 
 			// Post process
 			postProcess.Render(frameBuffer);
@@ -235,9 +257,9 @@ int main(void)
 
 				ImGui::Begin("Control Panel", 0, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
-				//ImGui::ColorEdit3("Light Color", (float*)&(directionalLight.color), 16777216);  // [0.0f, 1.0f] representation
-				//ImGui::ColorEdit3("Ambient Color", (float*)&(ambient), 16777216);
-				//ImGui::SliderFloat("Smoothness", &smoothness, 0.0f, 10.0f, "%.1f");
+				ImGui::ColorEdit3("Light Color", (float*)&(directionalLight.color), 16777216);  // [0.0f, 1.0f] representation
+				ImGui::ColorEdit3("Ambient Color", (float*)&(ambient), 16777216);               // [0.0f, 1.0f] representation
+				ImGui::SliderFloat("Smoothness", &smoothness, 0.0f, 10.0f, "%.1f");
 				ImGui::Text(
 					"FPS: %.0f  (Avg %.2fms/frame)", ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate
 				);
